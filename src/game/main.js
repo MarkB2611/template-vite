@@ -23,7 +23,15 @@ const config = {
         MainMenu,
         MainGame,
         GameOver
-    ]
+    ],
+    
+    physics: {                 // ✅ ADD THIS
+        default: 'arcade',
+        arcade: {
+            debug: true        // optional (but helpful)
+        }
+    }
+
 };
 
 const StartGame = (parent) => {
