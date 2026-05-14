@@ -5,10 +5,10 @@ export default class WaveNumberUI extends Phaser.GameObjects.Text {
     constructor(scene, x, y, number) {
         super(scene, x, y, "Wave: " + number, {
             fontFamily: 'Georgia',
-            fontSize: 22,
-            color: '#00ff51',
-            stroke: '#0062ff',
-            strokeThickness: 8,
+            fontSize: 48,
+            color: '#ff0000',
+            stroke: '#000000',
+            strokeThickness: 16,
             align: 'center'
         });
 

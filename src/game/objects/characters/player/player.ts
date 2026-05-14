@@ -10,6 +10,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     turnSpeed: any;
     targetAngle: any;
 
+
+    score: number = 500;
+
     //weapon stats(may want to separate after working)
     clipSize = 8;
     clipAmount = 8;
@@ -68,6 +71,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    //      --------------
+    // -----  MOVING/LOOKING ------
+    //     -----------------
     //moving function
     move() {
         const speed = 200;
@@ -113,7 +119,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
-    
+    //      --------------
+    // -----  GUNS/WEAPONS ------
+    //     -----------------
     reload() {
         if (this.isReloading) return;
         if (this.reserveSize < this.clipSize) return;
@@ -152,10 +160,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             new Bullet(this.scene, this.x, this.y, this.targetAngle);
             //reduces  clipsize by the depletion amount(burst would be 3)
             this.clipAmount -= this.depletionAmount;
-        } else {
-            
-            this.reload();
-        }
+        } 
         this.scene.events.emit('ammoChanged', this.clipAmount, this.reserveSize);
     }
+
+
+
 }

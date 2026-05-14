@@ -15,6 +15,10 @@ export class Boot extends Scene
         this.load.image('background', 'assets/TopDownBackground.png');
         this.load.image("player", "assets/survivor1_gun.png");
         this.load.image("bullet", "assets/projectiles/9mmBulletHorizontalVertical.png");
+
+        //npcs
+        //enemies
+        this.load.image("base_zombie", "assets/npcs/enemies/zombie1_hold.png");
     
         
         //sound

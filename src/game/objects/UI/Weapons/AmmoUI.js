@@ -3,12 +3,12 @@ import * as Phaser from "phaser";
 
 export default class AmmoUI {
     constructor(scene, x, y) {
-        this.text = scene.add.text(x, y, "ammo: 8 / 32", {
+        this.text = scene.add.text(x, y, "8 / 32", {
             fontFamily: 'Georgia',
             fontSize: 38,
-            color: '#ffffff',
+            color: '#02ff4e',
             stroke: '#000000',
-            strokeThickness: 8,
+            strokeThickness: 18,
         });
 
         this.text.setOrigin(0.5);
@@ -17,7 +17,7 @@ export default class AmmoUI {
     }
 
     updateText(clip, reserve) {
-        this.text.setText(`Ammo: ${clip} / ${reserve}`);
+        this.text.setText(`${clip} / ${reserve}`);
     }
 }
 

@@ -30,5 +30,28 @@ export default class WaveHandler  {
     SpawnEnemies() {
         this.DefineTotalQuantityOfEnemies();
         console.log("Wave(instance): " + this.WaveNumber + ", NumOfenemiesThisWave: " + this.NumOfEnemiesRemain);
+
+        
+        for (let i = 0; i < this.NumOfEnemiesRemain; i++) {
+
+            // Generate bounds
+            const randXUpper = (Math.random() * 1000) + (Math.random() * 2100 - 1000) + 1000;
+            const randXLower = (Math.random() * 1000) - (Math.random() * 2100 + 1000) - 1000;
+            const randYUpper = (Math.random() * 1000) + (Math.random() * 2100 - 1000) + 1000;
+            const randYLower = (Math.random() * 1000) - (Math.random() * 2100 + 1000) - 1000;
+
+            // ✅ Normalize (prevents broken ranges)
+            const minX = Math.min(randXLower, randXUpper);
+            const maxX = Math.max(randXLower, randXUpper);
+            const minY = Math.min(randYLower, randYUpper);
+            const maxY = Math.max(randYLower, randYUpper);
+
+            // ✅ Pick random point within range
+            const x = Math.random() * (maxX - minX) + minX;
+            const y = Math.random() * (maxY - minY) + minY;
+
+            console.log(`coordinates of zombie: ${x}, ${y}`);
+        }
+
     }
 }
