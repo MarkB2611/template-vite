@@ -1,5 +1,6 @@
 
 import { Scene } from 'phaser';
+import SoundHandler from '../objects/handlers/sound/music/soundHandler';
 import Player from "../objects/characters/player/player";
 import AmmoUI from "../objects/UI/Weapons/AmmoUI";
 import LocationUI from "../objects/UI/Location/LocationUI";
@@ -13,6 +14,17 @@ export class Game extends Scene {
         this.load.image('background', 'assets/TopDownBackground.png');
         this.load.image("player", "assets/survivor1_gun.png");
         this.load.image("bullet", "assets/projectiles/9mmBulletHorizontalVertical.png");
+    
+    
+        //sound
+        this.load.audio('sfx_wave_start', 'assets/sounds/game/mainloop/roundSounds/SoundFX2(RoundStart).mp3');
+        this.load.audio("sfx_wave_end", "assets/sounds/game/mainloop/roundSounds/SoundFX3(RoundEnd).mp3");
+        this.load.audio("sfx_gunshot_laser_1", "assets/sounds/game/mainloop/weapons/SoundFX1(laser).mp3" );
+
+        //music
+        this.load.audio("music_track_1_90bpm", "assets/sounds/music/Zombie90bpmFL1.mp3");
+        this.load.audio("music_track_2_123bpm", "assets/sounds/music/Zombie123bpmFL2.mp3");
+    
     }
 
 
@@ -21,6 +33,9 @@ export class Game extends Scene {
         
         console.log("Loading Game");
         
+        //sound handler(handles music and sound effects)
+        this.soundHandler = new SoundHandler(this);
+        this.soundHandler.startPlaylist();
 
         this.add.image(512, 384, 'background').setAlpha(0.5);
 
@@ -38,15 +53,23 @@ export class Game extends Scene {
         
         this.events.on('postupdate', () => {
             console.log("Frame OK");
+           
         });
 
         
 
-         // ✅ Shooting
+         //Shooting Input and sound, and playershoot
         this.input.on('pointerdown', () => {
-            this.player.shoot();
+            if( this.player.clipAmount > 0) {
+                this.player.shoot();
+                this.soundHandler.playSFX("sfx_gunshot_laser_1", 0.3, 2.3, 2400);
+            }
+            
             //this.ammoUI.updateText(); // update only when needed
         });
+
+        this.soundHandler.playSFX("sfx_wave_start", 0.6, 1.4);
+        console.log("wave 1 started");
     }
 
     update() {
