@@ -117,16 +117,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     reload() {
         if (this.isReloading) return;
         if (this.reserveSize < this.clipSize) return;
-
+        // Emit event - for sfx
         this.isReloading = true;
 
         console.log("Reloading...");
 
+        //reload sound effect trigger
+        this.scene.events.emit('playerReload');
+
         this.scene.time.delayedCall(this.reloadTime, () => {
+            
+            
+
             this.reserveSize += this.clipAmount;
             this.clipAmount = this.clipSize;
 
             this.reserveSize -= this.clipSize;
+
+            
                         
 
             this.isReloading = false;

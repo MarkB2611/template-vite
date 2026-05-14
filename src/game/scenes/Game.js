@@ -1,9 +1,12 @@
 
 import { Scene } from 'phaser';
 import SoundHandler from '../objects/handlers/sound/music/soundHandler';
+import WaveHandler from '../objects/handlers/enemies/waveHandler';
 import Player from "../objects/characters/player/player";
 import AmmoUI from "../objects/UI/Weapons/AmmoUI";
 import LocationUI from "../objects/UI/Location/LocationUI";
+import EnemiesRemainUI from '../objects/UI/Game/EnemiesRemainingUI';
+import WaveNumberUI from '../objects/UI/Game/WaveNumberUI';
 
 export class Game extends Scene {
     constructor() {
@@ -20,10 +23,13 @@ export class Game extends Scene {
         this.load.audio('sfx_wave_start', 'assets/sounds/game/mainloop/roundSounds/SoundFX2(RoundStart).mp3');
         this.load.audio("sfx_wave_end", "assets/sounds/game/mainloop/roundSounds/SoundFX3(RoundEnd).mp3");
         this.load.audio("sfx_gunshot_laser_1", "assets/sounds/game/mainloop/weapons/SoundFX1(laser).mp3" );
+        this.load.audio("sfx_gun_reload", "assets/sounds/game/mainloop/weapons/sourced-Freesounds-reload.mp3")
 
         //music
         this.load.audio("music_track_1_90bpm", "assets/sounds/music/Zombie90bpmFL1.mp3");
         this.load.audio("music_track_2_123bpm", "assets/sounds/music/Zombie123bpmFL2.mp3");
+
+    
     
     }
 
@@ -37,6 +43,9 @@ export class Game extends Scene {
         this.soundHandler = new SoundHandler(this);
         this.soundHandler.startPlaylist();
 
+        this.waveHandler = new WaveHandler(this);
+        this.waveHandler.SpawnEnemies();
+
         this.add.image(512, 384, 'background').setAlpha(0.5);
 
         // ✅ Player
@@ -46,6 +55,8 @@ export class Game extends Scene {
         // ✅ UI (clean + separated)
         this.locationUI = new LocationUI(this, 150, 50, "groundZero");
 
+        this.enemyRemainingUI = new EnemiesRemainUI(this, 850, 650, this.waveHandler.NumOfEnemiesRemain,  this.waveHandler.MaxEnemies);
+        this.waveNumberUI = new WaveNumberUI(this, 890, 615, this.waveHandler.WaveNumber);
         
         
         
@@ -56,7 +67,12 @@ export class Game extends Scene {
            
         });
 
-        
+       
+        //reloading
+        this.events.on('playerReload', () => {
+            this.soundHandler.playSFX("sfx_gun_reload", 0.8 );
+        });
+
 
          //Shooting Input and sound, and playershoot
         this.input.on('pointerdown', () => {
@@ -64,6 +80,7 @@ export class Game extends Scene {
                 this.player.shoot();
                 this.soundHandler.playSFX("sfx_gunshot_laser_1", 0.3, 2.3, 2400);
             }
+            
             
             //this.ammoUI.updateText(); // update only when needed
         });
