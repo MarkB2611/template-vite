@@ -5,7 +5,7 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     //Stats
     turnSpeed: any;
     targetAngle: any;
-
+    health: number = 20;
 
     
    
@@ -44,7 +44,7 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     //moving function
     move() {
         const speed = 200;
-        this.setVelocity(0);
+        
 
         // LEFT
             //this.setVelocityX(-speed);
@@ -62,7 +62,7 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     }
 
     //looking/aiming function
-    look() {
+    lookToPoint() {
         
         const pointer = this.scene.input.activePointer;
 
@@ -82,6 +82,41 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    
+    look() {
+        if (!this.scene) return;              // scene gone
+        if (!this.active) return;             // enemy destroyed/inactive
+
+        const player = (this.scene as any).player;
+        if (!player || !player.active) return;
+
+        this.targetAngle = Phaser.Math.Angle.Between(
+            this.x,
+            this.y,
+            player.x,
+            player.y
+        );
+
+        this.rotation = Phaser.Math.Angle.RotateTo(
+            this.rotation,
+            this.targetAngle,
+            this.turnSpeed
+        );
+    }
+
+
+    takeDamage(amount: number) {
+        this.health -= amount;
+        
+
+        if(this.health < 0) {
+            //adds 100 points to the point total
+            this.scene.events.emit("point_increase", 100); 
+            this.setActive(false);
+            this.setVisible(false);
+            this.destroy();
+        }
+    }
     
 
 

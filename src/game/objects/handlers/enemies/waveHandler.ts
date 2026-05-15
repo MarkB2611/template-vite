@@ -1,4 +1,5 @@
 import * as Phaser from "phaser"
+import BaseZombie from "./baseEnemy";
 
 //meant to handle enemy spawns and the beginning and ending condition of the wave
 export default class WaveHandler  {
@@ -14,8 +15,12 @@ export default class WaveHandler  {
     MaxEnemies: number = 8;
     MinEnemies: number = 8;
 
+    scene: Phaser.Scene;
+    //enemiesList
+    enemies: BaseZombie[] = [];
+
     constructor(scene: Phaser.Scene) {
-        
+        this.scene = scene;
     }
 
     DefineTotalQuantityOfEnemies() {
@@ -51,7 +56,24 @@ export default class WaveHandler  {
             const y = Math.random() * (maxY - minY) + minY;
 
             console.log(`coordinates of zombie: ${x}, ${y}`);
+
+            const enemy = new BaseZombie(this.scene, x, y, i);
+            this.enemies.push(enemy);
+            
+            // ✅ add to Phaser physics group
+            (this.scene as any).enemies.add(enemy);
+
         }
+
+    }
+
+    update() {
+        
+        this.enemies.forEach((enemy) => {
+            if(enemy != undefined) {
+                enemy.update(); // or whatever method you need
+            }
+        });
 
     }
 }

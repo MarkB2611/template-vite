@@ -17,7 +17,7 @@ export default class ScoreNumberUI extends Phaser.GameObjects.Text {
         scene.add.existing(this);
     }
 
-    setWave(number) {
-        this.setText("Wave: " + number);
+    setScore(number) {
+        this.setText(number);
     }
 }

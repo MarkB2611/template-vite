@@ -25,6 +25,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     isReloading = false;
     reloadTime = 1500; // ms
 
+    //
+    
+    fireRate = 200;   // milliseconds between shots
+    lastFired = 0;
+
+
 
     //maybes even an extra class for the bullet types.
     bulletSpeed = 500;
@@ -58,10 +64,15 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         //basic settings
         this.setCollideWorldBounds(true);
         this.scene.events.emit('ammoChanged', this.clipAmount, this.reserveSize);
+
+        //scores
+        this.scene.events.on('point_increase', (number: number) => {
+            this.score += number;
+        });
     }
     
 
-    update() {
+    update(time: number) {
         //functions tying to mechanics
         this.move();
         this.look();
@@ -69,6 +80,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         if(this.clipAmount < this.depletionAmount) {
             this.reload();
         }
+        
+
+        const pointer = this.scene.input.activePointer;
+
+        if (pointer.isDown) {
+            this.shoot(time);
+        }
+
+        
+
+
     }
 
     //      --------------
@@ -154,15 +176,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
 
-    shoot() {
-        //if ther clipsize is both more than zero and more than the depletion amount then fire
-        if(this.clipAmount > 0 && this.clipAmount >= this.depletionAmount) {
-            new Bullet(this.scene, this.x, this.y, this.targetAngle);
-            //reduces  clipsize by the depletion amount(burst would be 3)
+    
+    
+    shoot(time: number) {
+        if (time < this.lastFired + this.fireRate) return;
+
+        if (this.clipAmount > 0 && this.clipAmount >= this.depletionAmount) {
+
+            this.lastFired = time; // ✅ set cooldown
+
+            const bullet = new Bullet(this.scene, this.x, this.y, this.targetAngle);
+
+            (this.scene as any).bullets.add(bullet);
+
             this.clipAmount -= this.depletionAmount;
-        } 
+            (this.scene as any).soundHandler.playSFX("sfx_gunshot_laser_1", 0.3, 2.3, 2400);
+        }
+
         this.scene.events.emit('ammoChanged', this.clipAmount, this.reserveSize);
     }
+
+
 
 
 
