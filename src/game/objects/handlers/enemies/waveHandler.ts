@@ -6,6 +6,7 @@ export default class WaveHandler  {
     //default is wave 1 and 8 enemies
     WaveNumber: number = 1;
     NumOfEnemiesRemain: number = 8;
+    MaxEnemiesThisWave: number = 8;
     //can get the burst of enemies amount here(also could start with enemies only appearing after the previous burst disappearing#
     // then gradually make it so that I can add the next burst when a few enemies are kept)
     EnemiesKilled: number = 0;
@@ -14,20 +15,70 @@ export default class WaveHandler  {
     // initially it will be solely based upon wave number.
     MaxEnemies: number = 8;
     MinEnemies: number = 8;
-
     scene: Phaser.Scene;
     //enemiesList
     enemies: BaseZombie[] = [];
 
+    enemySpeed: number = 120;
+    enemyHealth: number = 20;
+
     constructor(scene: Phaser.Scene) {
         this.scene = scene;
+        this.scene.events.on("enemy_dead", this.onEnemyDead, this);
+    }
+        
+    
+    
+    onEnemyDead(enemy: BaseZombie) {
+        this.enemies = this.enemies.filter(e => e !== enemy);
+
+        // ✅ Always correct count
+        this.NumOfEnemiesRemain--;
+
+        // ✅ Update UI directly (no event needed)
+        (this.scene as any).enemyRemainingUI.setAmount(
+            this.NumOfEnemiesRemain,
+            this.MaxEnemies
+        );
+
+        this.EnemiesKilled++;
+    
+        if(this.NumOfEnemiesRemain <= 0) {
+            this.NextWave();
+        }
+    }
+
+    NextWave() {
+        this.WaveNumber++;
+        this.scene.events.emit("next_wave", this.WaveNumber);
+
+        
+        this.DefineTotalQuantityOfEnemies();
+        this.SpawnEnemies();
+        // ✅ Update UI directly (no event needed)
+        (this.scene as any).enemyRemainingUI.setAmount(
+            this.NumOfEnemiesRemain,
+            this.MaxEnemies
+        );
     }
 
     DefineTotalQuantityOfEnemies() {
-        //gets the total number
-         //wave number multiplied by rounded whole number inbetween max and min enemy numbers for range
-        const quantityOfEnemies = this.WaveNumber * (Math.floor(Math.random() * (this.MaxEnemies - this.MinEnemies)) + this.MinEnemies);
+                
+        // Scale difficulty with wave number
+        const scaledMin = Math.floor(this.MinEnemies + this.WaveNumber * 0.5);
+        const scaledMax = Math.floor(this.MaxEnemies + this.WaveNumber * 0.5);
+
+        // Get total enemies for this wave
+        const quantityOfEnemies = Math.floor(
+        Math.random() * (scaledMax - scaledMin + 1)
+        ) + scaledMin;
+
+        // Assign values
         this.NumOfEnemiesRemain = quantityOfEnemies;
+        this.MaxEnemies = quantityOfEnemies;
+        this.MaxEnemiesThisWave = quantityOfEnemies; // for UI
+
+        
         
         console.log("Wave: " + this.WaveNumber + ", NumOfenemiesThisWave: " + quantityOfEnemies);
     }
@@ -57,7 +108,10 @@ export default class WaveHandler  {
 
             console.log(`coordinates of zombie: ${x}, ${y}`);
 
-            const enemy = new BaseZombie(this.scene, x, y, i);
+            const enemy = new BaseZombie(this.scene, x, y, i, this.enemyHealth, this.enemySpeed);
+            //basic scaling for health and speed of enemies
+            this.enemySpeed = this.WaveNumber * 1.2 + enemy.speed;
+            this.enemyHealth = this.WaveNumber * 1.1 + enemy.health;
             this.enemies.push(enemy);
             
             // ✅ add to Phaser physics group
@@ -74,6 +128,8 @@ export default class WaveHandler  {
                 enemy.update(); // or whatever method you need
             }
         });
+
+        
 
     }
 }

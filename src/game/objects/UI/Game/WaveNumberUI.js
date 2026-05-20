@@ -15,6 +15,10 @@ export default class WaveNumberUI extends Phaser.GameObjects.Text {
         this.setOrigin(0.5);
 
         scene.add.existing(this);
+
+        this.scene.events.on("next_wave", (waveNum) => {
+            this.setWave(waveNum);
+        })
     }
 
     setWave(number) {

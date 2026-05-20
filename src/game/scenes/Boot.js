@@ -15,12 +15,25 @@ export class Boot extends Scene
         this.load.image('background', 'assets/TopDownBackground.png');
         this.load.image("player", "assets/survivor1_gun.png");
         this.load.image("bullet", "assets/projectiles/9mmBulletHorizontalVertical.png");
+        this.load.image("crosshair", "assets/crosshair/Crosshair1.png");
+
 
         //npcs
         //enemies
         this.load.image("base_zombie", "assets/npcs/enemies/zombie1_hold.png");
     
-        
+        //objects
+        //slrWallBuy
+        this.load.image("weapon_pickup_slr", "assets/wallpurchases/weapons/L1A1SLR/still/L1A1SLRSingle.png");
+        //animSLR
+        this.load.image("slr1", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr1.png");
+        this.load.image("slr2", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr2.png");
+        this.load.image("slr3", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr3.png");
+        this.load.image("slr4", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr4.png");
+        this.load.audio("sfx_wall_buy", "public/assets/sounds/game/mainloop/purchases/weapons/WallBuySfx.mp3");
+
+
+
         //sound
         this.load.audio('sfx_wave_start', 'assets/sounds/game/mainloop/roundSounds/SoundFX2(RoundStart).mp3');
         this.load.audio("sfx_wave_end", "assets/sounds/game/mainloop/roundSounds/SoundFX3(RoundEnd).mp3");

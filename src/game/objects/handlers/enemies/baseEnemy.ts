@@ -1,4 +1,5 @@
 import * as Phaser from "phaser";
+import Player from "../../characters/player/player";
 
 export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     
@@ -6,34 +7,46 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     turnSpeed: any;
     targetAngle: any;
     health: number = 20;
+    speed: number = 110;
+    
+    stopRadius: number;
+
 
     
    
 
 
-    constructor(scene: Phaser.Scene, x: number, y: number, zombieIndex: number) {
-        super(scene, x, y, "base_zombie"); // "base_zombie" = the texture key of the object.
+   
+    constructor(scene: Phaser.Scene, x: number, y: number, zombieIndex: number, enemyHealth?: number, enemySpeed?: number) {
+        super(scene, x, y, "base_zombie");
 
         this.turnSpeed = 0.5;
 
-        console.log("Zombie Spawned" + zombieIndex);
-        //add to scene and add physics
+        // ✅ random stop distance
+        this.stopRadius = Phaser.Math.Between(20, 80);
+
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        
-        
-        
-
-        //basic settings
         this.setCollideWorldBounds(false);
+        if(enemyHealth) {
+            this.health = enemyHealth;
+        }
+        if(enemySpeed) {
+            this.speed = enemySpeed;
+        }
+       
     }
+
     
 
     update() {
-        //functions tying to mechanics
-        this.move();
+        //guard the update for destory condition
+        if (!this.active) return;
+        //functions tying to #
         this.look();
+        this.move();
+        
         
        
     }
@@ -42,24 +55,36 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     // -----  MOVING/LOOKING ------
     //     -----------------
     //moving function
+    
+   
     move() {
-        const speed = 200;
+        if (!this.active || !this.body) return;
+
+        const player = (this.scene as any).player;
+        if (!player || !player.active) return;
+
+        const distance = Phaser.Math.Distance.Between(
+            this.x,
+            this.y,
+            player.x,
+            player.y
+        );
+
         
 
-        // LEFT
-            //this.setVelocityX(-speed);
-        
-        // RIGHT
-            //this.setVelocityX(speed);
-        
+        // ✅ Stop when inside your personal radius
+        if (distance <= this.stopRadius) {
+            this.setVelocity(0, 0);
+            return;
+        }
 
-        // UP
-            //this.setVelocityY(-speed);
-        
-        // DOWN
-            //this.setVelocityY(speed);
-        
+        // ✅ Move toward facing direction
+        this.setVelocity(
+            Math.cos(this.rotation) * this.speed,
+            Math.sin(this.rotation) * this.speed
+        );
     }
+
 
     //looking/aiming function
     lookToPoint() {
@@ -112,6 +137,7 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
         if(this.health < 0) {
             //adds 100 points to the point total
             this.scene.events.emit("point_increase", 100); 
+            this.scene.events.emit("enemy_dead");
             this.setActive(false);
             this.setVisible(false);
             this.destroy();

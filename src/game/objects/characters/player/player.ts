@@ -1,5 +1,6 @@
 import * as Phaser from "phaser";
 import Bullet from "./projectiles/bullets/Bullet";
+import Weapon from "./projectiles/weapons/Weapon";
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -13,22 +14,40 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     score: number = 500;
 
-    //weapon stats(may want to separate after working)
-    clipSize = 8;
-    clipAmount = 8;
-    reserveSize = 32;
-    reserveMaxSize = 80;
-    //would change to enum for burst, auto, single and adaptations on that in future(i.e scalability)
-    autoFire = false;
-    depletionAmount = 1;
-    //reloads
-    isReloading = false;
-    reloadTime = 1500; // ms
+    //weapons
+    currentWeapon!: Weapon;
+    weapon1!: Weapon;
+    weapon2?: Weapon;
 
-    //
+
+    //crosshairStats
+    crosshair!: Phaser.GameObjects.Image;
+    crosshairRadius = 250;
     
-    fireRate = 200;   // milliseconds between shots
-    lastFired = 0;
+    //Sprint Data
+    baseSpeed = 200;
+    sprintMultiplier = 1.8;
+
+    maxStamina = 100;
+    stamina = 100;
+
+    staminaDrainRate = 0.58;
+    staminaRegenRate = 0.38;
+
+    staminaRegenDelay = 1600;
+    lastSprintTime = 0;
+
+    minSprintStamina = 10;
+    canSprint = true;
+
+    isSprinting = false;
+    shiftKey!: Phaser.Input.Keyboard.Key;
+    reloadKey!: Phaser.Input.Keyboard.Key;
+
+
+
+
+
 
 
 
@@ -61,31 +80,88 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         });
 
 
+                
+        this.weapon1 = new Weapon(scene, {
+            clipSize: 8,
+            reserveSize: 80,
+            reserveMaxSize: 80,
+            fireRate: 200,
+            reloadTime: 1500,
+            damage: 15,
+            bulletSpeed: 500,
+            depletionAmount: 1
+        });
+        this.currentWeapon = this.weapon1;
+
+
         //basic settings
         this.setCollideWorldBounds(true);
-        this.scene.events.emit('ammoChanged', this.clipAmount, this.reserveSize);
+        this.scene.events.emit('ammoChanged', this.currentWeapon.clipAmount, this.currentWeapon.reserveSize);
 
+        
+        this.crosshair = scene.add.image(x, y, "crosshair");
+        this.crosshair.setDepth(10);
+        this.crosshair.setAlpha(0.7);
+
+        
         //scores
         this.scene.events.on('point_increase', (number: number) => {
             this.score += number;
         });
+
+        
+        this.shiftKey = scene.input.keyboard!.addKey(
+            Phaser.Input.Keyboard.KeyCodes.SHIFT
+        );
+        this.reloadKey = scene.input.keyboard!.addKey(
+            Phaser.Input.Keyboard.KeyCodes.R
+        );
+
     }
+
+    
+        
+    updateCrosshair() {
+        const pointer = this.scene.input.activePointer;
+
+        const dist = Phaser.Math.Distance.Between(
+            this.x,
+            this.y,
+            pointer.worldX,
+            pointer.worldY
+        );
+
+        let targetX = pointer.worldX;
+        let targetY = pointer.worldY;
+
+        if (dist > this.crosshairRadius) {
+            targetX = this.x + Math.cos(this.targetAngle) * this.crosshairRadius;
+            targetY = this.y + Math.sin(this.targetAngle) * this.crosshairRadius;
+        }
+
+        this.crosshair.setPosition(targetX, targetY);
+
+        // Optional rotation
+        this.crosshair.rotation = this.targetAngle;
+    }
+
+
     
 
     update(time: number) {
         //functions tying to mechanics
         this.move();
         this.look();
+        this.updateCrosshair();
         
-        if(this.clipAmount < this.depletionAmount) {
-            this.reload();
+        //changed weapons to be a separate class, also added reload button.
+        const pointer = this.scene.input.activePointer;
+        if(this.currentWeapon.clipAmount < this.currentWeapon.depletionAmount || this.reloadKey.isDown && this.currentWeapon.clipAmount < this.currentWeapon.clipSize) {
+            this.currentWeapon.reload();
         }
         
-
-        const pointer = this.scene.input.activePointer;
-
         if (pointer.isDown) {
-            this.shoot(time);
+            this.currentWeapon.shoot(this.x, this.y, this.targetAngle, time);
         }
 
         
@@ -97,28 +173,61 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     // -----  MOVING/LOOKING ------
     //     -----------------
     //moving function
+    //Includes normalisation for diagonal speed increases
+    //adds sprint function -depend on stamina making player walk adds complexity to gameplay while being simple to follow
+   
+    
     move() {
-        const speed = 200;
-        this.setVelocity(0);
+        let dx = 0;
+        let dy = 0;
 
-        // LEFT
-        if (this.cursors.left?.isDown || this.wasd.left.isDown) {
-            this.setVelocityX(-speed);
-        }
-        // RIGHT
-        else if (this.cursors.right?.isDown || this.wasd.right.isDown) {
-            this.setVelocityX(speed);
+        if (this.cursors.left?.isDown || this.wasd.left.isDown) dx -= 1;
+        if (this.cursors.right?.isDown || this.wasd.right.isDown) dx += 1;
+        if (this.cursors.up?.isDown || this.wasd.up.isDown) dy -= 1;
+        if (this.cursors.down?.isDown || this.wasd.down.isDown) dy += 1;
+
+        let speed = this.baseSpeed;
+        const isMoving = (dx !== 0 || dy !== 0);
+
+        // ✅ LOCK SYSTEM
+        if (this.stamina <= 0) {
+            this.canSprint = false;
         }
 
-        // UP
-        if (this.cursors.up?.isDown || this.wasd.up.isDown) {
-            this.setVelocityY(-speed);
+        if (this.stamina >= this.minSprintStamina) {
+            this.canSprint = true;
         }
-        // DOWN
-        else if (this.cursors.down?.isDown || this.wasd.down.isDown) {
-            this.setVelocityY(speed);
-        }  
+
+        // ✅ Sprint logic using lock
+        if (this.shiftKey.isDown && isMoving && this.canSprint) {
+            this.isSprinting = true;
+            speed *= this.sprintMultiplier;
+
+            this.stamina -= this.staminaDrainRate;
+            if (this.stamina < 0) this.stamina = 0;
+
+            this.lastSprintTime = this.scene.time.now;
+        } else {
+            this.isSprinting = false;
+
+            // ✅ Regen (with delay if you added it)
+            if (this.scene.time.now > this.lastSprintTime + this.staminaRegenDelay) {
+                this.stamina += this.staminaRegenRate;
+                if (this.stamina > this.maxStamina) this.stamina = this.maxStamina;
+            }
+        }
+
+        // ✅ Movement
+        const vec = new Phaser.Math.Vector2(dx, dy);
+
+        if (vec.length() > 0) {
+            vec.normalize().scale(speed);
+        }
+
+        this.setVelocity(vec.x, vec.y);
     }
+
+
 
     //looking/aiming function
     look() {
@@ -136,68 +245,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.rotation = Phaser.Math.Angle.RotateTo(
             this.rotation,
             this.targetAngle,
-            this.turnSpeed   // 👈 smaller = slower turning
+            this.turnSpeed   
         );
 
     }
-
-    //      --------------
-    // -----  GUNS/WEAPONS ------
-    //     -----------------
-    reload() {
-        if (this.isReloading) return;
-        if (this.reserveSize < this.clipSize) return;
-        // Emit event - for sfx
-        this.isReloading = true;
-
-        console.log("Reloading...");
-
-        //reload sound effect trigger
-        this.scene.events.emit('playerReload');
-
-        this.scene.time.delayedCall(this.reloadTime, () => {
-            
-            
-
-            this.reserveSize += this.clipAmount;
-            this.clipAmount = this.clipSize;
-
-            this.reserveSize -= this.clipSize;
-
-            
-                        
-
-            this.isReloading = false;
-
-            console.log("Reload complete");
-            this.scene.events.emit('ammoChanged', this.clipAmount, this.reserveSize);
-        });
-        
-    }
-
-
-    
-    
-    shoot(time: number) {
-        if (time < this.lastFired + this.fireRate) return;
-
-        if (this.clipAmount > 0 && this.clipAmount >= this.depletionAmount) {
-
-            this.lastFired = time; // ✅ set cooldown
-
-            const bullet = new Bullet(this.scene, this.x, this.y, this.targetAngle);
-
-            (this.scene as any).bullets.add(bullet);
-
-            this.clipAmount -= this.depletionAmount;
-            (this.scene as any).soundHandler.playSFX("sfx_gunshot_laser_1", 0.3, 2.3, 2400);
-        }
-
-        this.scene.events.emit('ammoChanged', this.clipAmount, this.reserveSize);
-    }
-
-
-
-
 
 }

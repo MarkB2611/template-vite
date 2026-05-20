@@ -20,4 +20,5 @@ export default class EnemiesRemainUI extends Phaser.GameObjects.Text {
     setAmount(remaining, maximum) {
         this.setText("Enemies: " + remaining + " / " + maximum);
     }
+
 }
