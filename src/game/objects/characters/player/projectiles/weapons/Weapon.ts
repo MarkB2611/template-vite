@@ -6,6 +6,8 @@ import Bullet from "../bullets/Bullet";
 export default class Weapon {
     scene: Phaser.Scene;
 
+    name: string = "M1911";
+    description: string = "desc";
     // stats
     clipSize: number;
     clipAmount: number;
@@ -20,6 +22,7 @@ export default class Weapon {
 
     damage: number;
     bulletSpeed: number;
+    penetration: number;
 
     depletionAmount: number;
 
@@ -37,6 +40,7 @@ export default class Weapon {
 
         this.damage = config.damage;
         this.bulletSpeed = config.bulletSpeed;
+        this.penetration = config.penetration ?? 0; // default = no penetration power.
 
         this.depletionAmount = config.depletionAmount ?? 1;
     }
@@ -48,7 +52,7 @@ export default class Weapon {
 
         this.lastFired = time;
 
-        const bullet = new Bullet(this.scene, x, y, angle);
+        const bullet = new Bullet(this.scene, x, y, angle, this.damage, this.bulletSpeed, this.penetration);
         (this.scene as any).bullets.add(bullet);
 
         this.clipAmount -= this.depletionAmount;

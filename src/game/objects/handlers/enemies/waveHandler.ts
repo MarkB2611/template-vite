@@ -109,9 +109,13 @@ export default class WaveHandler  {
             console.log(`coordinates of zombie: ${x}, ${y}`);
 
             const enemy = new BaseZombie(this.scene, x, y, i, this.enemyHealth, this.enemySpeed);
-            //basic scaling for health and speed of enemies
-            this.enemySpeed = this.WaveNumber * 1.2 + enemy.speed;
-            this.enemyHealth = this.WaveNumber * 1.1 + enemy.health;
+            //basic scaling for health and speed of enemies(limited for balancing against the player, wave amounts arent capped)
+            if(this.enemySpeed < 140){
+                this.enemySpeed = Math.random() * (this.WaveNumber * 1.02) + enemy.speed;
+            }
+            if( this.enemyHealth < 250 ) {
+                this.enemyHealth = Math.random() * (this.WaveNumber * 1.01) + enemy.health;
+            }
             this.enemies.push(enemy);
             
             // ✅ add to Phaser physics group

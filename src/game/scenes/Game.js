@@ -42,8 +42,8 @@ export class Game extends Scene {
             null,
             this
         );
-
         
+ 
         //sound handler(handles music and sound effects)
         this.soundHandler = new SoundHandler(this);
         this.soundHandler.startPlaylist();
@@ -115,7 +115,9 @@ export class Game extends Scene {
             fireRate: 140,
             reloadTime: 1800,
             damage: 13,
-            bulletSpeed: 800,
+            bulletSpeed: 1400,
+            //3 enemies, 2 sequential targets after first
+            penetration: 2,
             depletionAmount: 1
         });
         this.player.weapon1 = slr;
@@ -129,8 +131,8 @@ export class Game extends Scene {
         console.log("HIT!");
         this.events.emit("point_increase", 10);
         console.log(this.player.score);
-        enemy.takeDamage(this.player.currentWeapon.damage);
-        bullet.destroy();
+        //enemy.takeDamage(this.player.currentWeapon.damage);
+        bullet.onHitEnemy(enemy);
     }
 
 }

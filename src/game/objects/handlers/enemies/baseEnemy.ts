@@ -11,16 +11,19 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
     
     stopRadius: number;
 
+    zombieIndex: number;
+
 
     
    
 
 
    
-    constructor(scene: Phaser.Scene, x: number, y: number, zombieIndex: number, enemyHealth?: number, enemySpeed?: number) {
+    constructor(scene: Phaser.Scene, x: number, y: number, zombieI: number, enemyHealth?: number, enemySpeed?: number) {
         super(scene, x, y, "base_zombie");
 
         this.turnSpeed = 0.5;
+        this.zombieIndex = zombieI;
 
         // ✅ random stop distance
         this.stopRadius = Phaser.Math.Between(20, 80);
