@@ -1,9 +1,9 @@
-WeaponID,WeaponName,WeaponDescription,Auto,ClipSize,ReserveSize,FireRate,ReloadTime,Damage,BulletSpeed,Penetration,DepletionAmount,BaseCost,AssetDirectory
-0,Browning Hi-Power L9A1,Semi Auto High Cap Sidearm(UK Circa 1950-2010),False,13,130,210,600,6,800,0,1,200,NA
-1,L1A1 SLR,Semi Auto Self Loading Rifle(UK Circa 1950-1980),False,20,300,140,1800,17,1400,2,1,600,public/assets/wallpurchases/weapons/L1A1SLR
-2,Webley Mark IV,Revolvers are a classic for a reason(UK Circa 1930-1960),False,6,240,200,1000,36,1800,3,1,800,NA
-3,Sawed Off Farmers Shotgun,Ba Bam-Ba Bam-Reload-Ba Bam-Ba Bam(This Hurts),False,2,180,250,1200,10x30,1200,0,1,1200,NA
-4,Sterling SMG,Iconic UK smg - deadly in the right hands(UK Circa 1950-1990),True,34,442,80,1200,21,1200,1,1,1350,NA
-5,Remington 870,Pump Action Shotgun(UK Introduced 1950),False,6,224,140,1400,13x35,1400,1,1,1600,NA
-6,Mossberg 500,Pump Action Shotgun(UK Adopted 1960 - US Made),False,8,260,130,1400,9x30,1400,3,1,1750,NA
-7,FN MAG,Belgian High Capacity Killing Machine(is it considered killing if the zombies are already dead?)(UK Circa 1958/1959),True,100,500,110,2500,48,2100,3,1,2500,NA
+WeaponID,WeaponName,WeaponDescription,Auto,ClipSize,ReserveSize,FireRate,ReloadTime,Damage,BulletSpeed,Spread,Penetration,DepletionAmount,BaseCost,AssetDirectory
+0,Browning Hi-Power L9A1,Semi Auto High Cap Sidearm(UK Circa 1950-2010),False,13,130,210,600,6,800,0.08,0,1,200,NA
+1,L1A1 SLR,Semi Auto Self Loading Rifle(UK Circa 1950-1980),False,20,300,140,1800,17,1400,0.04,2,1,600,public/assets/wallpurchases/weapons/L1A1SLR
+2,Webley Mark IV,Revolvers are a classic for a reason(UK Circa 1930-1960),False,6,240,200,1000,36,1800,0.09,3,1,800,NA
+3,Sawed Off Farmers Shotgun,Ba Bam-Ba Bam-Reload-Ba Bam-Ba Bam(This Hurts),False,2,180,250,1200,10x30,1200,0.1,0,1,1200,NA
+4,Sterling SMG,Iconic UK smg - deadly in the right hands(UK Circa 1950-1990),True,34,442,80,1200,21,1200,0.13,1,1,1350,NA
+5,Remington 870,Pump Action Shotgun(UK Introduced 1950),False,6,224,140,1400,13x35,1400,0.08,1,1,1600,NA
+6,Mossberg 500,Pump Action Shotgun(UK Adopted 1960 - US Made),False,8,260,130,1400,9x30,1400,0.08,3,1,1750,NA
+7,FN MAG,Belgian High Capacity Killing Machine(is it considered killing if the zombies are already dead?)(UK Circa 1958/1959),True,100,500,110,2500,48,2100,0.13,3,1,2500,NA
