@@ -28,6 +28,7 @@ export default class Weapon {
     // damage
     damage: number;
     pelletCount: number; // NEW (for shotguns)
+    spread: number; //unintentional addition for single bullet/pellet weapons, adds to gameplay and necessity for shotguns
 
     bulletSpeed: number;
     penetration: number;
@@ -40,34 +41,36 @@ export default class Weapon {
     constructor(scene: Phaser.Scene, config: any) {
         this.scene = scene;
 
-        this.id = config.id;
-        this.name = config.name;
-        this.description = config.description;
+        this.id = config.id ?? 999;
+        this.name = config.name ?? "DEFAULT WEAPON";
+        this.description = config.description ?? "DEFAULT VALUES";
 
-        this.auto = config.auto;
+        this.auto = config.auto ?? false;
 
         // ammo
-        this.clipSize = config.clipSize;
-        this.clipAmount = config.clipSize;
+        this.clipSize = config.clipSize ?? 3;
+        this.clipAmount = config.clipSize ?? 3;
 
-        this.reserveSize = config.reserveSize;
-        this.reserveMaxSize = config.reserveMaxSize ?? config.reserveSize;
+        this.reserveSize = config.reserveSize ?? 30;
+        this.reserveMaxSize = config.reserveMaxSize ?? config.reserveSize ?? 30;
 
         // firing
-        this.fireRate = config.fireRate;
-        this.reloadTime = config.reloadTime;
+        this.fireRate = config.fireRate ?? 10;
+        this.reloadTime = config.reloadTime ?? 3000;
 
         // damage (supports shotgun format like "10x30")
-        this.damage = config.damage;
+        this.damage = config.damage ?? 8;
         this.pelletCount = config.pelletCount ?? 1;
+        //default spread is 0.1
+        this.spread = config.spread ?? 0.1;
 
-        this.bulletSpeed = config.bulletSpeed;
+        this.bulletSpeed = config.bulletSpeed ?? 300;
         this.penetration = config.penetration ?? 0;
 
         this.depletionAmount = config.depletionAmount ?? 1;
 
         this.baseCost = config.baseCost ?? 0;
-        this.assetDirectory = config.assetDirectory ?? "";
+        this.assetDirectory = config.assetDirectory ?? "NA";
     }
 
     shoot(x: number, y: number, angle: number, time: number) {
@@ -77,9 +80,10 @@ export default class Weapon {
 
         this.lastFired = time;
 
+        (this.scene as any).soundHandler.playSFX("sfx_gunshot_laser_1", 0.1, 2.6, 100 );
         // 🔥 Support shotgun pellets
         for (let i = 0; i < this.pelletCount; i++) {
-            const spread = Phaser.Math.FloatBetween(-0.1, 0.1);
+            const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
 
             const bullet = new Bullet(
                 this.scene,

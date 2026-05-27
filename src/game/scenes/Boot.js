@@ -24,13 +24,22 @@ export class Boot extends Scene
     
         //objects
         //slrWallBuy
-        this.load.image("weapon_pickup_slr", "assets/wallpurchases/weapons/L1A1SLR/still/L1A1SLRSingle.png");
+        this.load.image("weapon_1_still", "assets/wallpurchases/weapons/L1A1SLR/still/L1A1SLRSingle.png");
         //animSLR
-        this.load.image("slr1", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr1.png");
-        this.load.image("slr2", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr2.png");
-        this.load.image("slr3", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr3.png");
-        this.load.image("slr4", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr4.png");
-        this.load.audio("sfx_wall_buy", "public/assets/sounds/game/mainloop/purchases/weapons/WallBuySfx.mp3");
+        this.load.image("weapon_1_1", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr1.png");
+        this.load.image("weapon_1_2", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr2.png");
+        this.load.image("weapon_1_3", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr3.png");
+        this.load.image("weapon_1_4", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr4.png");
+        //browning wall buy
+        this.load.image("weapon_0_still", "assets/wallpurchases/weapons/BrowningHiPower/still/BrowningHiPowerSingle.png");
+        //AnimBrowning
+        this.load.image("weapon_0_1", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim1.png");
+        this.load.image("weapon_0_2", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim2.png");
+        this.load.image("weapon_0_3", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim3.png");
+        this.load.image("weapon_0_4", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim4.png");
+
+
+        this.load.audio("sfx_wall_buy", "assets/sounds/game/mainloop/purchases/weapons/WallBuySfx.mp3");
 
 
 
@@ -43,6 +52,9 @@ export class Boot extends Scene
         //music
         this.load.audio("music_track_1_90bpm", "assets/sounds/music/Zombie90bpmFL1.mp3");
         this.load.audio("music_track_2_123bpm", "assets/sounds/music/Zombie123bpmFL2.mp3");
+
+        //DATA/CSVS
+        this.load.text("weaponsCSV", "assets/csvs/weapons/weapons_list.csv");
     }
 
     create ()

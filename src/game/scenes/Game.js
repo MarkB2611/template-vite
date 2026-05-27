@@ -4,6 +4,8 @@ import SoundHandler from '../objects/handlers/sound/music/soundHandler';
 import WaveHandler from '../objects/handlers/enemies/waveHandler';
 import Player from "../objects/characters/player/player";
 import Weapon from '../objects/characters/player/projectiles/weapons/Weapon';
+import WeaponManager from '../objects/characters/player/projectiles/weapons/WeaponManager';
+
 
 import BaseZombie from '../objects/handlers/enemies/baseEnemy';
 import AmmoUI from "../objects/UI/Weapons/AmmoUI";
@@ -54,7 +56,7 @@ export class Game extends Scene {
         this.add.image(512, 384, 'background').setAlpha(0.5);
 
         //objects(wall buys)
-        this.slrWallBuy = new WeaponPickup(this, 120, 240);
+        this.slrWallBuy = new WeaponPickup(this, 120, 240, 1);
 
         // ✅ Player
         this.player = new Player(this, 400, 300);
@@ -63,6 +65,11 @@ export class Game extends Scene {
         this.events.on('point_increase', (number) => {
             this.score.setScore(this.player.score);
         });
+
+
+
+        
+
 
         // ✅ UI (clean + separated)
         this.locationUI = new LocationUI(this, 150, 50, "groundZero");
@@ -79,16 +86,20 @@ export class Game extends Scene {
        
         //reloading
         this.events.on('playerReload', () => {
-            this.soundHandler.playSFX("sfx_gun_reload", 0.8 );
+            this.soundHandler.playSFX("sfx_gun_reload", 0.5 );
         });
-
+        //score handling
+        this.events.on('point_decrease', (value) => {
+            this.score.setScore(this.player.score);
+            console.log("Points decreased by " , value);
+        });
        
 
         
 
 
         //initialises first round.
-        this.soundHandler.playSFX("sfx_wave_start", 0.6, 1.4);
+        this.soundHandler.playSFX("sfx_wave_start", 0.4, 1.4);
         console.log("wave 1 started");
 
         
@@ -99,31 +110,30 @@ export class Game extends Scene {
         this.waveHandler.update();
         // () => passes as a function
         // or this.onBuy.bind(this)
-        this.slrWallBuy.update(this.player, this.player.score, () => this.onBuy());
+        this.slrWallBuy.update(this.player);
     }
 
+    //adds weapon by ID 
     onBuy() {
-        this.soundHandler.playSFX("sfx_wall_buy", 1.0, 3.0, 1800);
-        //on purchase log event and remove cost from player
-        console.log("Bought SLR");
+        
+        const success = this.player.weaponManager.addWeaponById(1);
+
+        if (!success) {
+            this.player.weaponManager.replaceWeapon(
+                this.player.weaponManager.currentSlot,
+                1
+            );
+            console.log("Error: Weapon Manager Failed to add weapon by ID")
+        } else {
+        }
+
+        this.events.emit("ammoChanged", this.player.weaponManager.currentWeapon.clipAmount, this.player.weaponManager.currentWeapon.reserveSize);
         this.player.score -= this.slrWallBuy.cost;
         this.score.setScore(this.player.score);
-        const slr = new Weapon(this, {        
-            clipSize: 20,
-            reserveSize: 300,
-            reserveMaxSize: 300,
-            fireRate: 140,
-            reloadTime: 1800,
-            damage: 13,
-            bulletSpeed: 1400,
-            //3 enemies, 2 sequential targets after first
-            penetration: 2,
-            depletionAmount: 1
-        });
-        this.player.weapon1 = slr;
-        this.player.currentWeapon = slr;
-        this.events.emit('ammoChanged', this.player.currentWeapon.clipAmount, this.player.currentWeapon.reserveSize);
-        //after creating csv set new weapon by replacing current weapon and one of the slots with the weapon corresponding to an ID.
+
+        console.log(this.player.weaponManager.getWeapons());
+        this.soundHandler.playSFX("sfx_wall_buy", 0.7, 3.0, 1800);
+
         
     }
 

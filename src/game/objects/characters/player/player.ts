@@ -1,6 +1,7 @@
 import * as Phaser from "phaser";
 import Bullet from "./projectiles/bullets/Bullet";
 import Weapon from "./projectiles/weapons/Weapon";
+import WeaponManager from "./projectiles/weapons/WeaponManager";
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -14,11 +15,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     score: number = 500;
 
-    //weapons
-    currentWeapon!: Weapon;
-    weapon1!: Weapon;
-    weapon2?: Weapon;
+    // Replaced weapon System
+    weaponManager!: WeaponManager;
 
+    //perk manager priority 2
+
+    //item manager priority 3
+
+    //consumable manager priority 4
 
     //crosshairStats
     crosshair!: Phaser.GameObjects.Image;
@@ -43,6 +47,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     isSprinting = false;
     shiftKey!: Phaser.Input.Keyboard.Key;
     reloadKey!: Phaser.Input.Keyboard.Key;
+    
+    //add 3 if u make it to 3 weapons
+    key1!: Phaser.Input.Keyboard.Key;
+    key2!: Phaser.Input.Keyboard.Key;
 
 
 
@@ -81,7 +89,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
                 
-        this.weapon1 = new Weapon(scene, {
+        /*this.weapon1 = new Weapon(scene, {
             clipSize: 8,
             reserveSize: 80,
             reserveMaxSize: 80,
@@ -91,12 +99,24 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             bulletSpeed: 500,
             depletionAmount: 1
         });
-        this.currentWeapon = this.weapon1;
+        this.currentWeapon = this.weapon1;*/
+
+        this.weaponManager = new WeaponManager(scene, 2);
+
+        // input
+        
+        this.key1 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.ONE);
+        this.key2 = scene.input.keyboard!.addKey(Phaser.Input.Keyboard.KeyCodes.TWO);
+
 
 
         //basic settings
         this.setCollideWorldBounds(true);
-        this.scene.events.emit('ammoChanged', this.currentWeapon.clipAmount, this.currentWeapon.reserveSize);
+        const weapon = this.weaponManager.getCurrentWeapon();
+       
+        if(weapon) {
+            this.scene.events.emit('ammoChanged', weapon.clipAmount, weapon.reserveSize);
+        }
 
         
         this.crosshair = scene.add.image(x, y, "crosshair");
@@ -156,13 +176,27 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         
         //changed weapons to be a separate class, also added reload button.
         const pointer = this.scene.input.activePointer;
-        if(this.currentWeapon.clipAmount < this.currentWeapon.depletionAmount || this.reloadKey.isDown && this.currentWeapon.clipAmount < this.currentWeapon.clipSize) {
-            this.currentWeapon.reload();
+
+        const weapon = this.weaponManager.getCurrentWeapon();
+        if (!weapon) return;
+
+        if(weapon.clipAmount < weapon.depletionAmount || this.reloadKey.isDown && weapon.clipAmount < weapon.clipSize) {
+            weapon.reload();
         }
         
         if (pointer.isDown) {
-            this.currentWeapon.shoot(this.x, this.y, this.targetAngle, time);
+            weapon.shoot(this.x, this.y, this.targetAngle, time);
         }
+
+        
+
+        if (Phaser.Input.Keyboard.JustDown(this.key1)) {
+            this.weaponManager.handleNumberInput(1);
+        } else if(Phaser.Input.Keyboard.JustDown(this.key2)) {
+            this.weaponManager.handleNumberInput(2);
+        }
+
+        
 
         
 
