@@ -10,6 +10,8 @@ Added a better way to call sound effects using events and the main game scene.
 
 working on fixing the auto fire, semi fire, burst fire conundrum - changing boolean to a string(that functions as an enum)
 
+made a weaponPickupHandler that now allows me to store all the weaponPickup Logic elsewhere.
+
 
 Agenda each day
 
