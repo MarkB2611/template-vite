@@ -2,6 +2,7 @@
 // Weapon.ts
 import * as Phaser from "phaser";
 import Bullet from "../bullets/Bullet";
+import { WeaponConfig } from "./WeaponManager";
 
 export default class Weapon {
     scene: Phaser.Scene;
@@ -10,7 +11,7 @@ export default class Weapon {
     name: string;
     description: string;
 
-    auto: boolean;
+    fireMode: "semi"|"auto"|"burst" = "semi";
 
     // ammo
     clipSize: number;
@@ -38,21 +39,22 @@ export default class Weapon {
     baseCost: number;
     assetDirectory: string;
 
-    constructor(scene: Phaser.Scene, config: any) {
+    constructor(scene: Phaser.Scene, config: WeaponConfig) {
         this.scene = scene;
 
         this.id = config.id ?? 999;
         this.name = config.name ?? "DEFAULT WEAPON";
         this.description = config.description ?? "DEFAULT VALUES";
 
-        this.auto = config.auto ?? false;
+        this.fireMode = config.fireMode ?? "semi";
 
         // ammo
         this.clipSize = config.clipSize ?? 3;
         this.clipAmount = config.clipSize ?? 3;
 
         this.reserveSize = config.reserveSize ?? 30;
-        this.reserveMaxSize = config.reserveMaxSize ?? config.reserveSize ?? 30;
+        //starts out with max - not a mistake just not making a redundant variable for no reason
+        this.reserveMaxSize = config.reserveSize ?? 30;
 
         // firing
         this.fireRate = config.fireRate ?? 10;

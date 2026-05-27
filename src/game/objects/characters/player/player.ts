@@ -44,6 +44,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     minSprintStamina = 10;
     canSprint = true;
 
+    wasPointerDown = false;
     isSprinting = false;
     shiftKey!: Phaser.Input.Keyboard.Key;
     reloadKey!: Phaser.Input.Keyboard.Key;
@@ -170,37 +171,83 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(time: number) {
         //functions tying to mechanics
+        const weapon = this.weaponManager.getCurrentWeapon();
+        if(!weapon) {
+            console.log("Weapon Not found");
+        }
         this.move();
         this.look();
         this.updateCrosshair();
-        
-        //changed weapons to be a separate class, also added reload button.
-        const pointer = this.scene.input.activePointer;
+        //changed so it only calls getCurrentWeapon once a frame - still a lot but minimised.
+        this.reload(weapon);
+        this.fire(time, weapon);
+        this.weaponSwaps();
 
-        const weapon = this.weaponManager.getCurrentWeapon();
+
+
+        //Resets was fired for fire
+        
+        if(weapon?.fireMode != "auto") {
+            this.wasPointerDown = this.scene.input.activePointer.isDown;
+        }
+    }
+
+    //      --------------------------------------------
+    //-------    FIRING/RELOADING/WEAPONSWAPPING       -------
+    //      --------------------------------------------
+
+
+    fire(time: number, weapon: Weapon | null) {
+        if(!weapon) {
+            console.log("Weapon Not Found, Cant fire");
+            return;
+        }
+        //changed weapons to be a separate class, also added reload button.
+        let justClicked = false;
+        const pointer = this.scene.input.activePointer;
+        if(weapon?.fireMode != "auto"){
+            justClicked = !this.wasPointerDown && pointer.isDown;
+        } else {
+            justClicked = this.wasPointerDown && pointer.isDown;
+        }
+         
+        if(weapon){
+            switch (weapon.fireMode) {
+                case "auto":
+                    if (pointer.isDown) {
+                        weapon.shoot(this.x, this.y, this.targetAngle, time);
+                    }
+                    break;
+
+                case "semi":
+                    if (justClicked) {
+                        weapon.shoot(this.x, this.y, this.targetAngle, time);
+                    }
+                    break;
+
+                case "burst":
+                    if (justClicked) {
+                        weapon.shoot(this.x, this.y, this.targetAngle, time);
+                    }
+                    break;
+            }
+        }
+    }
+    
+    reload(weapon: Weapon|null) {
         if (!weapon) return;
 
         if(weapon.clipAmount < weapon.depletionAmount || this.reloadKey.isDown && weapon.clipAmount < weapon.clipSize) {
             weapon.reload();
         }
-        
-        if (pointer.isDown) {
-            weapon.shoot(this.x, this.y, this.targetAngle, time);
-        }
+    }
 
-        
-
+    weaponSwaps() {
         if (Phaser.Input.Keyboard.JustDown(this.key1)) {
             this.weaponManager.handleNumberInput(1);
         } else if(Phaser.Input.Keyboard.JustDown(this.key2)) {
             this.weaponManager.handleNumberInput(2);
         }
-
-        
-
-        
-
-
     }
 
     //      --------------

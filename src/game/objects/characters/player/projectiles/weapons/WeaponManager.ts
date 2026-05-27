@@ -95,7 +95,7 @@ export default class WeaponManager {
                 name: row.WeaponName,
                 description: row.WeaponDescription,
 
-                auto: row.Auto === "True",
+                fireMode: row.FireMode ?? "semi",
 
                 clipSize: Number(row.ClipSize),
                 reserveSize: Number(row.ReserveSize),
@@ -293,7 +293,8 @@ export interface WeaponConfig {
     name: string;
     description: string;
 
-    auto: boolean;
+    //provides and enum/type - refactored from auto vs semi bool
+    fireMode: "semi"|"auto"|"burst";
 
     clipSize: number;
     reserveSize: number;

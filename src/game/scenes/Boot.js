@@ -38,18 +38,18 @@ export class Boot extends Scene
         this.load.image("weapon_0_3", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim3.png");
         this.load.image("weapon_0_4", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim4.png");
 
-
+        //sfx
         this.load.audio("sfx_wall_buy", "assets/sounds/game/mainloop/purchases/weapons/WallBuySfx.mp3");
         this.load.audio("sfx_weapon_swap", "assets/sounds/game/mainloop/weapons/Equipment-weapon-yoyosound.com.mp3");
         this.load.audio("sfx_equipment_equip", "assets/sounds/game/mainloop/equipment/Equipment-armor-yoyosound.com.mp3")
-
+        this.load.audio("sfx_gunshot_laser_1", "assets/sounds/game/mainloop/weapons/SoundFX1(laser).mp3" );
+        //freesounds needs to be in accredations
+        this.load.audio("sfx_gun_reload", "assets/sounds/game/mainloop/weapons/sourced-Freesounds-reload.mp3");
+        
 
         //sound
         this.load.audio('sfx_wave_start', 'assets/sounds/game/mainloop/roundSounds/SoundFX2(RoundStart).mp3');
         this.load.audio("sfx_wave_end", "assets/sounds/game/mainloop/roundSounds/SoundFX3(RoundEnd).mp3");
-        this.load.audio("sfx_gunshot_laser_1", "assets/sounds/game/mainloop/weapons/SoundFX1(laser).mp3" );
-        this.load.audio("sfx_gun_reload", "assets/sounds/game/mainloop/weapons/sourced-Freesounds-reload.mp3")
-
         //music
         this.load.audio("music_track_1_90bpm", "assets/sounds/music/Zombie90bpmFL1.mp3");
         this.load.audio("music_track_2_123bpm", "assets/sounds/music/Zombie123bpmFL2.mp3");
