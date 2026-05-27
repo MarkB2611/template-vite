@@ -93,7 +93,11 @@ export class Game extends Scene {
             this.score.setScore(this.player.score);
             console.log("Points decreased by " , value);
         });
-       
+        
+        //created this new method of playing sfx to reduce complexity - emit an event and then provide the key of the sound effect.
+        this.events.on("playSound", (soundEffectKey, volume, rate, detune) => {
+            this.soundHandler.playSFX(soundEffectKey, volume, rate, detune);
+        });
 
         
 

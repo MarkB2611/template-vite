@@ -134,6 +134,13 @@ export default class WeaponPickup extends Phaser.Physics.Arcade.Sprite {
                         "showMessage",
                         `Bought ${config.name}`
                     );
+                    this.scene.events.emit(
+                        "playSound",
+                        "sfx_wall_buy",
+                        0.7,
+                        1.8,
+                        3000
+                    )
 
                     // ✅ Reset prompt text
                     this.scene.time.delayedCall(1000, () => {

@@ -175,6 +175,8 @@ export default class WeaponManager {
 
                 // ✅ ALWAYS switch to new weapon
                 this.switchToSlot(i);
+                //update ammo counter via event
+                this.scene.events.emit("ammoChanged", weapon.clipAmount, weapon.reserveSize);
 
                 return true;
             }
@@ -217,6 +219,8 @@ export default class WeaponManager {
         this.currentWeapon = weapon;
 
         this.scene.events.emit("weaponSwitched", index, weapon);
+        this.scene.events.emit("playSound", "sfx_weapon_swap", 0.8, 1.0, 0);
+        this.scene.events.emit("ammoChanged", weapon.clipAmount, weapon.reserveSize);
     }
 
     // ✅ Keyboard helper

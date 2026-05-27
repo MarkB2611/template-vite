@@ -40,7 +40,8 @@ export class Boot extends Scene
 
 
         this.load.audio("sfx_wall_buy", "assets/sounds/game/mainloop/purchases/weapons/WallBuySfx.mp3");
-
+        this.load.audio("sfx_weapon_swap", "assets/sounds/game/mainloop/weapons/Equipment-weapon-yoyosound.com.mp3");
+        this.load.audio("sfx_equipment_equip", "assets/sounds/game/mainloop/equipment/Equipment-armor-yoyosound.com.mp3")
 
 
         //sound
