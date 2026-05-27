@@ -1,6 +1,5 @@
 
 import * as Phaser from "phaser";
-import WeaponManager from "../../characters/player/projectiles/weapons/WeaponManager";
 import Player from "../../characters/player/player";
 
 export default class WeaponPickup extends Phaser.Physics.Arcade.Sprite {
@@ -12,7 +11,7 @@ export default class WeaponPickup extends Phaser.Physics.Arcade.Sprite {
 
     private playerInRange: boolean = false;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, weaponId: number)
+    constructor(scene: Phaser.Scene, x: number, y: number, weaponId: number, scale: number)
     {
         super(scene, x, y, `weapon_${weaponId}_still`);
 
@@ -35,7 +34,7 @@ export default class WeaponPickup extends Phaser.Physics.Arcade.Sprite {
 
         this.promptText.setVisible(false);
 
-        this.setScale(0.8);
+        this.setScale(scale);
 
         
     }

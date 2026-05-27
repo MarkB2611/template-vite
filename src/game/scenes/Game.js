@@ -5,6 +5,7 @@ import WaveHandler from '../objects/handlers/enemies/waveHandler';
 import Player from "../objects/characters/player/player";
 import Weapon from '../objects/characters/player/projectiles/weapons/Weapon';
 import WeaponManager from '../objects/characters/player/projectiles/weapons/WeaponManager';
+import WeaponPickupManager from '../objects/Buyables/Weapons/WeaponPickupManager';
 
 
 import BaseZombie from '../objects/handlers/enemies/baseEnemy';
@@ -53,11 +54,9 @@ export class Game extends Scene {
         this.waveHandler = new WaveHandler(this);
         this.waveHandler.SpawnEnemies();
 
-        this.add.image(512, 384, 'background').setAlpha(0.5);
+        this.add.image(512, 384, 'background').setAlpha(0.8);
 
-        //objects(wall buys)
-        this.slrWallBuy = new WeaponPickup(this, 120, 240, 1);
-
+        
         // ✅ Player
         this.player = new Player(this, 400, 300);
         this.ammoUI = new AmmoUI(this, 920, 700);
@@ -67,7 +66,7 @@ export class Game extends Scene {
         });
 
 
-
+        this.weaponPickups = new WeaponPickupManager(this);
         
 
 
@@ -112,34 +111,12 @@ export class Game extends Scene {
     update(time) {
         this.player.update(time);
         this.waveHandler.update();
+        this.weaponPickups.update(this.player);
         // () => passes as a function
         // or this.onBuy.bind(this)
-        this.slrWallBuy.update(this.player);
-    }
-
-    //adds weapon by ID 
-    onBuy() {
-        
-        const success = this.player.weaponManager.addWeaponById(1);
-
-        if (!success) {
-            this.player.weaponManager.replaceWeapon(
-                this.player.weaponManager.currentSlot,
-                1
-            );
-            console.log("Error: Weapon Manager Failed to add weapon by ID")
-        } else {
-        }
-
-        this.events.emit("ammoChanged", this.player.weaponManager.currentWeapon.clipAmount, this.player.weaponManager.currentWeapon.reserveSize);
-        this.player.score -= this.slrWallBuy.cost;
-        this.score.setScore(this.player.score);
-
-        console.log(this.player.weaponManager.getWeapons());
-        this.soundHandler.playSFX("sfx_wall_buy", 0.7, 3.0, 1800);
-
         
     }
+
 
     onBulletHit(bullet, enemy) {
         console.log("HIT!");

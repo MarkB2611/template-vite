@@ -58,7 +58,8 @@ export default class WeaponManager {
 
         this.weaponSlots = new Array(maxSlots).fill(null);
 
-        this.addWeaponById(0);
+        //new default weapon - dusty old revolver - less powerful and intended to get the first weapons in the first room(always spawn a browning and a slr?)
+        this.addWeaponById(999);
         this.switchToSlot(0);
 
         this.scene.events.emit("ammoChanged", this.currentWeapon?.clipSize, this.currentWeapon?.reserveSize);
