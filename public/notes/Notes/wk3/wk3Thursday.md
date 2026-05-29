@@ -1,0 +1,57 @@
+**Wk3Tuesday**
+monday was bankbholiday thats why there are no notes for then
+
+**Worked on today**
+- started work on refactoring shooting for support of both shotguns and for burst weapons.
+- 
+
+
+STANDUP:
+
+Interesting
+
+graphQL is different on Mac as it is to windows,  Does anyone know about linux, ubuntu etc. (Devops question)
+
+- Graphql vs Rest API
+
+graphQl specifies the specific shape fo the data it wants,
+this seems like it could be similar to the openGL webgl etc
+
+RestAPIs use url style requests - think of this as the Wenbs type of APIs.
+
+
+Other NOtes:
+
+out of curiosity I searched up differences in test automation and devops skills in game development, As a result i found that fintech(my previous industry) - had a heavy emphasis on reliability and focus and accuracy.
+- whereas in games development creativity is more encouraged(and I have a lot of creativity). 
+
+Agenda THIS WEEK
+
+    What are you working on
+    - Front end system/client - been working on this for the past 3 weeks. plan on incorporating a small monolithic backend next week for the leaderboard
+    - CSV loading system(last week and works amazingly for the weapon system/ weapon loading and variety, easy to add new weapons with new stats and different PNGs for the pickups)
+    - added a new weapon pickup
+    - dealing with CSV files, Async programming, UI design, System Architecture, Object Oriented Programming, Integration of complex systems, scalability
+
+    next week:
+    - the leaderboard will show, score, kills, weapons bought, perks bought, consumables bought, consumables used, perk items bought
+    - Extra Rooms
+
+
+    Goals for the week
+    - Damage, health system
+    - Complete game loop that is playable until finish condition(no win condition as its a retro/arcade gameplay style) - when the player dies show the leaderboard and prompt to enter a 3 digit name
+    - Recording of the gameplay loop as a small look/demo - use editing so viewers can ge tthe just and its an easy watch as apposed to lots of unused time/boring gameplay at the sake of demonstrating. Much better having the majoirty of features showcased in a concise way as apposed to
+    all of the features at the cost of time. A short summary gameplay video. (recorded gameplay loop)
+    - fix burst weapons to fire delay fire delay fire delay - while allowing shotguns to fire multiple instantly
+
+    Blockers
+    - issue - Weapon System bug/refactor - fix - ( reactoring from a single weapon system to one that incorporates 2 weapons(with extension for scalability added to make it easy in future))
+    - issue - weapon type and csv refactor - had no way of doing burst, auto and semi - now I have 4 main weapon types semi, auto, burst, and spread(shotguns)
+    
+    Accolades and achievements from last weeks(last week highlighted rest mentioned to add a picture)
+    - got a basic structure set up to allow enemies to receive damage, give the player a score based upon hits and enemies,
+    - Gathered tools, utilised both linux(ubuntu) and windows(11)
+    - Set up github and floating between two computers to encourage development on multiple platforms(also for spottings issues between OS's sooner
+    rather than later)
+

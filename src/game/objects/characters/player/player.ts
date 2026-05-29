@@ -13,7 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     targetAngle: any;
 
 
-    score: number = 500;
+    score: number = 2250;
 
     // Replaced weapon System
     weaponManager!: WeaponManager;

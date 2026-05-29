@@ -8,5 +8,5 @@ WeaponID,WeaponName,WeaponDescription,FireMode,ClipSize,ReserveSize,FireRate,Rel
 6,Mossberg 500,Pump Action Shotgun(UK Adopted 1960 - US Made),semi,8,260,130,1400,9x30,1400,0.28,3,1,1750,NA
 7,FN MAG,Belgian High Capacity Killing Machine with a custom mag(is it considered killing if the zombies are already dead?)(UK Circa 1958/1959),semi,120,500,150,2500,26,2100,0.13,3,1,2500,NA
 8,Tec-9,Tec-9s are awesome - the worlds greatest spy and fry cook - how did he know its called a Tec-9(circa 1990),semi,32,320,100,600,32,1400,0.10,2,1,1800,NA
-9,HK G11,Who wants a burst weapon? (me). With a custom mag too? (yep)(circa 1980),burst,60,450,300,1500,30,2400,0.04,2,3,2250,NA
+9,HK G11,Who wants a burst weapon? (me). With a custom mag too? (yep)(circa 1980),burst,60,450,300,1500,3x30,2400,0.004,2,3,2250,NA
 999,Dusty Revolver(default),Not very powerful but survivors cant be choosers,semi,8,64,400,1200,6,600,0.05,0,1,0,NA

@@ -81,23 +81,53 @@ export default class Weapon {
         if (this.isReloading) return;
 
         this.lastFired = time;
+        
+        //replacing with safer one liner
+        //(this.scene as any).soundHandler.playSFX("sfx_gunshot_laser_1", 0.1, 2.6, 100 );
+        //if the spoundhandler breaks it simply wont call as apposed to crashing.
+        this.scene.events.emit("playSound", "sfx_gunshot_laser_1", 0.1, 2.6, 100 )
+        // 🔥 Support shotgun pellets - adding burst support
+        if(this.fireMode == "burst") { //add a small delay betqeen each fire
+            
+            const delayBetweenShots = 45; // ms between each shot in the burst
 
-        (this.scene as any).soundHandler.playSFX("sfx_gunshot_laser_1", 0.1, 2.6, 100 );
-        // 🔥 Support shotgun pellets
-        for (let i = 0; i < this.pelletCount; i++) {
-            const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
+            this.scene.time.addEvent({
+                delay: delayBetweenShots,
+                repeat: this.pelletCount - 1, // total shots = pelletCount
+                callback: () => {
+                    const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
 
-            const bullet = new Bullet(
-                this.scene,
-                x,
-                y,
-                angle + spread,
-                this.damage,
-                this.bulletSpeed,
-                this.penetration
-            );
+                    const bullet = new Bullet(
+                        this.scene,
+                        (this.scene as any).player.x,
+                        (this.scene as any).player.y,
+                        angle + spread,
+                        this.damage,
+                        this.bulletSpeed,
+                        this.penetration
+                    );
 
-            (this.scene as any).bullets.add(bullet);
+                    //dangerous see how I can replace
+                    (this.scene as any).bullets.add(bullet);
+                }
+            });
+
+        } else { //normal case
+            for (let i = 0; i < this.pelletCount; i++) {
+                const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
+
+                const bullet = new Bullet(
+                    this.scene,
+                    x,
+                    y,
+                    angle + spread,
+                    this.damage,
+                    this.bulletSpeed,
+                    this.penetration
+                );
+
+                (this.scene as any).bullets.add(bullet);
+            }
         }
 
         this.clipAmount -= this.depletionAmount;
