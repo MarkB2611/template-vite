@@ -13,7 +13,7 @@ export default class EnemiesRemainUI extends Phaser.GameObjects.Text {
         });
 
         this.setOrigin(0.5);
-
+        this.setAlpha(0.8);
         scene.add.existing(this);
     }
 

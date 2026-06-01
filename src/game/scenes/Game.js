@@ -11,10 +11,13 @@ import WeaponPickupManager from '../objects/Buyables/Weapons/WeaponPickupManager
 import BaseZombie from '../objects/handlers/enemies/baseEnemy';
 import AmmoUI from "../objects/UI/Weapons/AmmoUI";
 import ScoreNumberUI from '../objects/UI/Player/ScoreUI';
+import { HealthBarUI } from '../objects/UI/Player/HealthBarUI';
 import LocationUI from "../objects/UI/Location/LocationUI";
 import EnemiesRemainUI from '../objects/UI/Game/EnemiesRemainingUI';
 import WaveNumberUI from '../objects/UI/Game/WaveNumberUI';
 import WeaponPickup from '../objects/Buyables/Weapons/WeaponPickup';
+import GunNameUI from '../objects/UI/Player/gunNameUI';
+import GunDescriptionUI from '../objects/UI/Player/gunDescriptionUI';
 
 export class Game extends Scene {
     
@@ -59,12 +62,15 @@ export class Game extends Scene {
         
         // ✅ Player
         this.player = new Player(this, 400, 300);
-        this.ammoUI = new AmmoUI(this, 920, 700);
-        this.score = new ScoreNumberUI(this, 940, 630, this.player.score);
+        this.gunNameUI = new GunNameUI(this, 940, 620, "Dusty Revolver")
+        this.gunDescUI = new GunDescriptionUI(this, 860, 680, "Cruddy Old Revolver, Not Very good\n beggars cant be choosers \n and you can be a chooser my friend.");
+        this.ammoUI = new AmmoUI(this, 940, 700);
+        this.score = new ScoreNumberUI(this, 950, 580, this.player.score);
         this.events.on('point_increase', (number) => {
             this.score.setScore(this.player.score);
         });
 
+        this.healthBarUI = new HealthBarUI(this, 800, 732, 200, 20, 100);
 
         this.weaponPickups = new WeaponPickupManager(this);
         

@@ -12,6 +12,7 @@ export default class AmmoUI {
         });
 
         this.text.setOrigin(0.5);
+        this.text.setAlpha(0.75)
 
         scene.events.on('ammoChanged', this.updateText, this);
     }

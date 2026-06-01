@@ -13,6 +13,7 @@ export default class WaveNumberUI extends Phaser.GameObjects.Text {
         });
 
         this.setOrigin(0.5);
+        this.setAlpha(0.6)
 
         scene.add.existing(this);
 

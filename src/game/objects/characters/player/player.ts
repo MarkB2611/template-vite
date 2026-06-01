@@ -2,6 +2,7 @@ import * as Phaser from "phaser";
 import Bullet from "./projectiles/bullets/Bullet";
 import Weapon from "./projectiles/weapons/Weapon";
 import WeaponManager from "./projectiles/weapons/WeaponManager";
+import HealthManager from "./playerobjects/health/healthManager";
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -17,6 +18,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     // Replaced weapon System
     weaponManager!: WeaponManager;
+    healthManager!: HealthManager;
 
     //perk manager priority 2
 
@@ -103,6 +105,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.currentWeapon = this.weapon1;*/
 
         this.weaponManager = new WeaponManager(scene, 2);
+        this.healthManager = new HealthManager(80, 100, 1);
 
         // input
         

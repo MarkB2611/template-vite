@@ -13,6 +13,7 @@ export default class LocationUI extends Phaser.GameObjects.Text {
         });
 
         this.setOrigin(0.5);
+        this.setAlpha(0.3);
 
         scene.add.existing(this);
     }
