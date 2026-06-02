@@ -5,15 +5,16 @@ export default class GunNameUI extends Phaser.GameObjects.Text {
     constructor(scene, x, y, gunName) {
         super(scene, x, y,  gunName, {
             fontFamily: 'Courier New',
-            fontSize: 24,
+            fontSize: 22,
             color: '#000000',
-            stroke: '#ff00aa',
+            stroke: '#ff7300',
             strokeThickness: 7,
             align: 'center'
         });
 
-        this.setOrigin(0.7);
-        this.setAlpha(0.8);
+        this.setOrigin(0.9);
+        this.setAlpha(0.9);
+        
         scene.add.existing(this);
     }
 

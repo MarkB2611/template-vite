@@ -7,15 +7,26 @@ export default class GunDescriptionUI extends Phaser.GameObjects.Text {
             fontFamily: 'Courier New',
             fontSize: 9,
             color: '#fdfcfc',
-            stroke: '#ff0077',
+            stroke: '#ff6600',
             strokeThickness: 5,
-            align: 'center'
+            align: 'center',
+
+
+            wordWrap: {
+                width: 200,   // ✅ max width before wrapping
+                useAdvancedWrap: true
+            }
+
         });
 
-        this.setOrigin(0.7);
+
+        
+        this.setOrigin(0.9);
         this.setAlpha(0.9);
         scene.add.existing(this);
     }
+
+    
 
     setName(gunDesc) {
         this.setText(gunDesc);

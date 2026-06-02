@@ -73,12 +73,15 @@ export class Game extends Scene {
         this.waveHandler = new WaveHandler(this, this.enemies);
         this.waveHandler.SpawnEnemies();
 
+        this.weaponPickups = new WeaponPickupManager(this);
+        
+
         this.add.image(512, 384, 'background').setAlpha(0.8);
 
         
-        // ✅ Player
-        this.gunNameUI = new GunNameUI(this, 940, 620, "Dusty Revolver")
-        this.gunDescUI = new GunDescriptionUI(this, 940, 650, "Cruddy Old Revolver, Not very good\nbut its something.");
+        // UI AT THIS POINT
+        this.gunNameUI = new GunNameUI(this, 980, 620, "Dusty Revolver")
+        this.gunDescUI = new GunDescriptionUI(this, 980, 650, "Cruddy Old Revolver, Not very good\nbut its something.");
         this.ammoUI = new AmmoUI(this, 940, 700);
         this.score = new ScoreNumberUI(this, 930, 170, this.player.score);
         this.events.on('point_increase', (number) => {
@@ -87,7 +90,6 @@ export class Game extends Scene {
 
         this.healthBarUI = new HealthBarUI(this, 800, 732, this.player.healthManager, 200, 20);
 
-        this.weaponPickups = new WeaponPickupManager(this);
         
 
 
@@ -102,7 +104,11 @@ export class Game extends Scene {
             console.log("Frame OK");
            
         });*/
-
+        //weapon swaps
+        this.events.on("weaponSwitched", (index, weapon) => {
+           this.gunNameUI.setText(weapon.name); 
+           this.gunDescUI.setText(weapon.description);
+        });
        
         //reloading
         this.events.on('playerReload', () => {
@@ -129,8 +135,9 @@ export class Game extends Scene {
         
     }
 
-    update(time) {
+    update(time, delta) {
         this.player.update(time);
+        this.player.healthManager.Update(time, delta)
         this.waveHandler.update();
         this.weaponPickups.update(this.player);
         // () => passes as a function

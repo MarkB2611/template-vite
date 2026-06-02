@@ -133,6 +133,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             this.score += number;
         });
 
+        this.scene.events.on("next_wave", ()=> {
+            this.healthManager.healMax();
+        })
+
         
         this.shiftKey = scene.input.keyboard!.addKey(
             Phaser.Input.Keyboard.KeyCodes.SHIFT
@@ -336,6 +340,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     takeDamage(num: number) {
         this.healthManager.takeDamage(num);
+        this.scene.events.emit("playSfx", "")
     }
 
 }

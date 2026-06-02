@@ -15,12 +15,12 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
 
     //lastAttackTime
     lastAttackTime: number = 0;
-    attackCooldown: number = 3000; // 3 seconds
+    attackCooldown: number = 800; // 3 seconds
     isAttacking: boolean = false;
     attackWindup: number = 250;
     attackRange: number = 20;
 
-
+    
 
     
    
