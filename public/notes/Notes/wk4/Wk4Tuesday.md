@@ -15,12 +15,15 @@ win win
 
 Accomplished:
 - Slight visual changes for the gun description then wiring.
+-player damage systrem
+- end coniditon for player dying.
+
+
+
 Accomplishing:
 
-- Player damage system. using phsyics groups and integrating existing systems.
 
 Doing later:
 - before the 6th - AI LITERACY(even if you summarise the transcript)
-- Player damage system.
 - End condition, screen flow of data to score kills etc.
-- write to a csv for data to be passed
+- write to a csv for data to be passed(with game scroe and stuff etc)

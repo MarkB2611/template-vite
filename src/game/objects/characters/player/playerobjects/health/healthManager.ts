@@ -12,14 +12,16 @@ export default class HealthManager extends Phaser.Events.EventEmitter {
     
     private lastDamageTime = 0;
     private regenDelay = 2000
+    scene: Phaser.Scene;
 
-
-    constructor(health: number, maxHealth: number, regenRate: number) {
+    constructor(health: number, maxHealth: number, regenRate: number, scene: Phaser.Scene) {
         super();
 
         this.health = health;
         this.maxHealth = maxHealth;
         this.regenerationRate = regenRate;
+
+        this.scene = scene;
     }
 
 
@@ -41,7 +43,7 @@ export default class HealthManager extends Phaser.Events.EventEmitter {
         this.emit("healthChanged", this.health, this.maxHealth);
 
         if (this.health <= 0) {
-            this.emit("dead");
+            this.scene.events.emit("dead");
         }
     }
 

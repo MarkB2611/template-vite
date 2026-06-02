@@ -125,6 +125,9 @@ export class Game extends Scene {
             this.soundHandler.playSFX(soundEffectKey, volume, rate, detune);
         });
 
+        this.events.on("game_over", ()=> {
+            this.player.die();
+        });
         
 
 
@@ -178,7 +181,7 @@ export class Game extends Scene {
 
             if (distance <= zombie.attackRange) {
                 // ✅ HIT
-                player.takeDamage(10);
+                player.takeDamage(10, now);
                 this.events.emit("playSound", "sfx_zombie_punch_1", 0.8);
             } else {
                 // ❌ MISS (player dodged)

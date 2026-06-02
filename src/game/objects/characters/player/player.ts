@@ -36,6 +36,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     maxStamina = 100;
     stamina = 100;
+    
+    //start with one live
+    lives = 1;
 
     staminaDrainRate = 0.58;
     staminaRegenRate = 0.38;
@@ -55,6 +58,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     key1!: Phaser.Input.Keyboard.Key;
     key2!: Phaser.Input.Keyboard.Key;
 
+    scene: Phaser.Scene;
 
 
 
@@ -72,6 +76,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         console.log("Initializing...");
         //add to scene and add physics
+        this.scene = scene;
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
@@ -105,7 +110,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.currentWeapon = this.weapon1;*/
 
         this.weaponManager = new WeaponManager(scene, 2);
-        this.healthManager = new HealthManager(80, 100, 1);
+        this.healthManager = new HealthManager(80, 100, 1, this.scene);
 
         // input
         
@@ -136,6 +141,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.scene.events.on("next_wave", ()=> {
             this.healthManager.healMax();
         })
+
+        this.scene.events.on("dead", ()=> {
+            if(this.lives > 1) {
+
+            } else {
+                this.scene.events.emit("game_over");
+            }
+        });
 
         
         this.shiftKey = scene.input.keyboard!.addKey(
@@ -178,6 +191,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(time: number) {
         //functions tying to mechanics
+        if(this.isDestroyed) return;
         const weapon = this.weaponManager.getCurrentWeapon();
         if(!weapon) {
             console.log("Weapon Not found");
@@ -340,7 +354,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     takeDamage(num: number) {
         this.healthManager.takeDamage(num);
-        this.scene.events.emit("playSfx", "")
+        this.emit("playSound", "sfx_player_take_damage_1");
+    }
+    
+
+    die() {
+        this.disableBody();
+        this.disableInteractive();
+        //had issues destroying leave it here - still shoots after ;
     }
 
 }
