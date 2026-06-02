@@ -1,5 +1,6 @@
 
 import { Scene } from 'phaser';
+import * as Phaser from "phaser";
 import SoundHandler from '../objects/handlers/sound/music/soundHandler';
 import WaveHandler from '../objects/handlers/enemies/waveHandler';
 import Player from "../objects/characters/player/player";
@@ -18,6 +19,7 @@ import WaveNumberUI from '../objects/UI/Game/WaveNumberUI';
 import WeaponPickup from '../objects/Buyables/Weapons/WeaponPickup';
 import GunNameUI from '../objects/UI/Player/gunNameUI';
 import GunDescriptionUI from '../objects/UI/Player/gunDescriptionUI';
+import HealthManager from '../objects/characters/player/playerobjects/health/healthManager';
 
 export class Game extends Scene {
     
@@ -34,13 +36,16 @@ export class Game extends Scene {
         
         console.log("Loading Game");
 
-        //groups
-        
+        //player first for enemies, bullets reference
+        this.player = new Player(this, 400, 300);
+
+        //groups for physics/overlaps
         this.bullets = this.physics.add.group();
         this.enemies = this.physics.add.group();
 
         
-        //defined collision
+        //defined collisionS
+        //ENEMIES WITH BULLETS
         this.physics.add.overlap(
             this.bullets,
             this.enemies,
@@ -48,29 +53,39 @@ export class Game extends Scene {
             null,
             this
         );
+
+        //ENEMIES WITH PLAYER
+        this.physics.add.overlap(
+            this.player,
+            this.enemies,
+            this.onPlayerHit,
+            undefined,
+            this
+        );
+
+
         
  
         //sound handler(handles music and sound effects)
         this.soundHandler = new SoundHandler(this);
         this.soundHandler.startPlaylist();
 
-        this.waveHandler = new WaveHandler(this);
+        this.waveHandler = new WaveHandler(this, this.enemies);
         this.waveHandler.SpawnEnemies();
 
         this.add.image(512, 384, 'background').setAlpha(0.8);
 
         
         // ✅ Player
-        this.player = new Player(this, 400, 300);
         this.gunNameUI = new GunNameUI(this, 940, 620, "Dusty Revolver")
-        this.gunDescUI = new GunDescriptionUI(this, 860, 680, "Cruddy Old Revolver, Not Very good\n beggars cant be choosers \n and you can be a chooser my friend.");
+        this.gunDescUI = new GunDescriptionUI(this, 940, 650, "Cruddy Old Revolver, Not very good\nbut its something.");
         this.ammoUI = new AmmoUI(this, 940, 700);
-        this.score = new ScoreNumberUI(this, 950, 580, this.player.score);
+        this.score = new ScoreNumberUI(this, 930, 170, this.player.score);
         this.events.on('point_increase', (number) => {
             this.score.setScore(this.player.score);
         });
 
-        this.healthBarUI = new HealthBarUI(this, 800, 732, 200, 20, 100);
+        this.healthBarUI = new HealthBarUI(this, 800, 732, this.player.healthManager, 200, 20);
 
         this.weaponPickups = new WeaponPickupManager(this);
         
@@ -131,5 +146,42 @@ export class Game extends Scene {
         //enemy.takeDamage(this.player.currentWeapon.damage);
         bullet.onHitEnemy(enemy);
     }
+
+   
+    onPlayerHit(player, zombie) {
+        const now = this.time.now;
+
+        if (!zombie.canAttack(now) || zombie.isAttacking) return;
+
+        zombie.registerAttack(now);
+        zombie.isAttacking = true;
+
+        // ✅ Start attack wind-up
+        this.time.delayedCall(zombie.attackWindup, () => {
+
+            if (!zombie.active) return;
+
+            // ✅ Check distance at moment of swing
+            const distance = Phaser.Math.Distance.Between(
+                zombie.x,
+                zombie.y,
+                player.x,
+                player.y
+            );
+
+            if (distance <= zombie.attackRange) {
+                // ✅ HIT
+                player.takeDamage(10);
+                this.events.emit("playSound", "sfx_zombie_punch_1", 0.8);
+            } else {
+                // ❌ MISS (player dodged)
+                this.events.emit("playSound", "sfx_enemy_miss", 1.8, 1.0);
+            }
+
+            zombie.isAttacking = false;
+
+        });
+    }
+
 
 }

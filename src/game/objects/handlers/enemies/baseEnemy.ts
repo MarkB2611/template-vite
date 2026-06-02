@@ -13,6 +13,14 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
 
     zombieIndex: number;
 
+    //lastAttackTime
+    lastAttackTime: number = 0;
+    attackCooldown: number = 3000; // 3 seconds
+    isAttacking: boolean = false;
+    attackWindup: number = 250;
+    attackRange: number = 20;
+
+
 
     
    
@@ -26,7 +34,7 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
         this.zombieIndex = zombieI;
 
         // ✅ random stop distance
-        this.stopRadius = Phaser.Math.Between(20, 80);
+        this.stopRadius = Phaser.Math.Between(9, 29);
 
         scene.add.existing(this);
         scene.physics.add.existing(this);
@@ -146,7 +154,17 @@ export default class BaseZombie extends Phaser.Physics.Arcade.Sprite {
             this.destroy();
         }
     }
+
+    //ties into player/enemy physics group overlap
+    canAttack(now: number): boolean {
+        return now - this.lastAttackTime >= this.attackCooldown;
+    }
     
+    registerAttack(now: number) {
+        this.lastAttackTime = now;
+    }
+
+
 
 
 

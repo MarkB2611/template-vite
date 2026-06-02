@@ -47,6 +47,11 @@ export class Boot extends Scene
         this.load.audio("sfx_gun_reload", "assets/sounds/game/mainloop/weapons/sourced-Freesounds-reload.mp3");
         
 
+        //enemies/combat sound
+        this.load.audio("sfx_zombie_punch_1", "assets/sounds/400Sounds/Combat and Gore/punch.wav");
+        this.load.audio("sfx_player_take_damage_1", "assets/sounds/400Sounds/Combat and Gore/squelching_1.wav");
+        this.load.audio("sfx_enemy_miss", "assets/sounds/400Sounds/Combat and Gore/swipe.wav");
+        
         //sound
         this.load.audio('sfx_wave_start', 'assets/sounds/game/mainloop/roundSounds/SoundFX2(RoundStart).mp3');
         this.load.audio("sfx_wave_end", "assets/sounds/game/mainloop/roundSounds/SoundFX3(RoundEnd).mp3");

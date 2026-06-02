@@ -334,4 +334,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     }
 
+    takeDamage(num: number) {
+        this.healthManager.takeDamage(num);
+    }
+
 }

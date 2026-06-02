@@ -5,7 +5,7 @@ export default class ScoreNumberUI extends Phaser.GameObjects.Text {
     constructor(scene, x, y, number) {
         super(scene, x, y,  number, {
             fontFamily: 'Arial',
-            fontSize: 24,
+            fontSize: 30,
             color: '#000000',
             stroke: '#00ff15',
             strokeThickness: 13,
@@ -13,7 +13,7 @@ export default class ScoreNumberUI extends Phaser.GameObjects.Text {
         });
 
         this.setOrigin(0.5);
-        this.setAlpha(0.4)
+        this.setAlpha(0.7)
 
         scene.add.existing(this);
     }

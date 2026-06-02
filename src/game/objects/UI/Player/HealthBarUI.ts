@@ -1,5 +1,6 @@
 
 import * as Phaser from "phaser";
+import HealthManager from "../../characters/player/playerobjects/health/healthManager";
 
 export class HealthBarUI {
     scene: Phaser.Scene;
@@ -9,8 +10,8 @@ export class HealthBarUI {
     width: number;
     height: number;
 
-    maxHealth: number;
     currentHealth: number;
+    maxHealth: number;
 
     background: Phaser.GameObjects.Graphics;
     bar: Phaser.GameObjects.Graphics;
@@ -20,9 +21,9 @@ export class HealthBarUI {
         scene: Phaser.Scene,
         x: number,
         y: number,
+        healthManager: HealthManager,
         width: number = 200,
-        height: number = 20,
-        maxHealth: number = 100
+        height: number = 20
     ) {
         this.scene = scene;
 
@@ -31,8 +32,6 @@ export class HealthBarUI {
         this.width = width;
         this.height = height;
 
-        this.maxHealth = maxHealth;
-        this.currentHealth = maxHealth;
 
         // background
         this.background = scene.add.graphics();
@@ -47,9 +46,25 @@ export class HealthBarUI {
         this.border.lineStyle(2, 0xffffff, 1);
         this.border.strokeRect(x, y, width, height);
         
+        this.currentHealth = healthManager.health;
+        this.maxHealth = healthManager.maxHealth;
+
+
+        // Listen for health updates
+        healthManager.on("healthChanged", this.updateHealth, this);
+
+        
 
         this.draw();
     }
+
+
+    updateHealth(current: number, max: number) {
+        this.currentHealth = current;
+        this.maxHealth = max;
+        this.draw();
+    }
+
 
     draw() {
         this.bar.clear();

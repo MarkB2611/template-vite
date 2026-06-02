@@ -18,13 +18,20 @@ export default class WaveHandler  {
     scene: Phaser.Scene;
     //enemiesList
     enemies: BaseZombie[] = [];
+    //physics group
+    enemiesGroup: Phaser.Physics.Arcade.Group;
 
     enemySpeed: number = 120;
     enemyHealth: number = 20;
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Phaser.Scene, enemiesGroup: Phaser.Physics.Arcade.Group) {
         this.scene = scene;
+        this.enemiesGroup = enemiesGroup;
+
         this.scene.events.on("enemy_dead", this.onEnemyDead, this);
+
+
+        
     }
         
     
@@ -118,8 +125,8 @@ export default class WaveHandler  {
             }
             this.enemies.push(enemy);
             
-            // ✅ add to Phaser physics group
-            (this.scene as any).enemies.add(enemy);
+            // add to Phaser physics group
+            this.enemiesGroup.add(enemy);
 
         }
 

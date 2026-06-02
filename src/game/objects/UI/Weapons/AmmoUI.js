@@ -5,10 +5,10 @@ export default class AmmoUI {
     constructor(scene, x, y) {
         this.text = scene.add.text(x, y, "8 / 32", {
             fontFamily: 'Georgia',
-            fontSize: 38,
+            fontSize: 26,
             color: '#02ff4e',
             stroke: '#000000',
-            strokeThickness: 18,
+            strokeThickness: 14,
         });
 
         this.text.setOrigin(0.5);
