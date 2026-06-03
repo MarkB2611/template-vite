@@ -3,6 +3,7 @@
 import * as Phaser from "phaser";
 import Bullet from "../bullets/Bullet";
 import { WeaponConfig } from "./WeaponManager";
+import Explosion from "../explosions/Explosion";
 
 export default class Weapon {
     scene: Phaser.Scene;
@@ -97,10 +98,30 @@ export default class Weapon {
                 callback: () => {
                     const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
 
+
+                    const offsetX = 20;   // right of player
+                    const offsetY = -10;  // above player
+
+                    const cos = Math.cos(angle);
+                    const sin = Math.sin(angle);
+
+                    // rotate offset around player
+                    const spawnX = x + (offsetX * cos - offsetY * sin);
+                    const spawnY = y + (offsetX * sin + offsetY * cos);
+
                     const bullet = new Bullet(
                         this.scene,
-                        (this.scene as any).player.x,
-                        (this.scene as any).player.y,
+                        spawnX,
+                        spawnY,
+                        angle + spread,
+                        this.damage,
+                        this.bulletSpeed,
+                        this.penetration
+                    );
+                    const explosion = new Explosion(
+                        this.scene,
+                        spawnX,
+                        spawnY,
                         angle + spread,
                         this.damage,
                         this.bulletSpeed,
@@ -116,10 +137,31 @@ export default class Weapon {
             for (let i = 0; i < this.pelletCount; i++) {
                 const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
 
+
+                const offsetX = 25;   // right of player
+                const offsetY = 10;  // above player
+
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+
+                // rotate offset around player
+                const spawnX = x + (offsetX * cos - offsetY * sin);
+                const spawnY = y + (offsetX * sin + offsetY * cos);
+
+
                 const bullet = new Bullet(
                     this.scene,
-                    x,
-                    y,
+                    spawnX,
+                    spawnY,
+                    angle + spread,
+                    this.damage,
+                    this.bulletSpeed,
+                    this.penetration
+                );
+                const explosion = new Explosion(
+                    this.scene,
+                    spawnX,
+                    spawnY,
                     angle + spread,
                     this.damage,
                     this.bulletSpeed,

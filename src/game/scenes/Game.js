@@ -13,6 +13,7 @@ import BaseZombie from '../objects/handlers/enemies/baseEnemy';
 import AmmoUI from "../objects/UI/Weapons/AmmoUI";
 import ScoreNumberUI from '../objects/UI/Player/ScoreUI';
 import { HealthBarUI } from '../objects/UI/Player/HealthBarUI';
+import { StaminaBarUI } from '../objects/UI/Player/StaminaBarUI';
 import LocationUI from "../objects/UI/Location/LocationUI";
 import EnemiesRemainUI from '../objects/UI/Game/EnemiesRemainingUI';
 import WaveNumberUI from '../objects/UI/Game/WaveNumberUI';
@@ -34,6 +35,7 @@ export class Game extends Scene {
     //designed myself and refactored into classes using AI(copilot)
     create() {
         
+        this.add.image(512, 384, 'background').setAlpha(0.8).setScale(1.1);
         console.log("Loading Game");
 
         //player first for enemies, bullets reference
@@ -76,7 +78,6 @@ export class Game extends Scene {
         this.weaponPickups = new WeaponPickupManager(this);
         
 
-        this.add.image(512, 384, 'background').setAlpha(0.8);
 
         
         // UI AT THIS POINT
@@ -84,12 +85,10 @@ export class Game extends Scene {
         this.gunDescUI = new GunDescriptionUI(this, 980, 650, "Cruddy Old Revolver, Not very good\nbut its something.");
         this.ammoUI = new AmmoUI(this, 940, 700);
         this.score = new ScoreNumberUI(this, 930, 170, this.player.score);
-        this.events.on('point_increase', (number) => {
-            this.score.setScore(this.player.score);
-        });
+        
 
         this.healthBarUI = new HealthBarUI(this, 800, 732, this.player.healthManager, 200, 20);
-
+        this.staminaBarUI = new StaminaBarUI(this, 25, 732, this.player.staminaManager, 300, 20);
         
 
 
@@ -115,6 +114,9 @@ export class Game extends Scene {
             this.soundHandler.playSFX("sfx_gun_reload", 0.5 );
         });
         //score handling
+        this.events.on('point_increase', (number) => {
+            this.score.setScore(this.player.score);
+        });
         this.events.on('point_decrease', (value) => {
             this.score.setScore(this.player.score);
             console.log("Points decreased by " , value);
@@ -139,8 +141,7 @@ export class Game extends Scene {
     }
 
     update(time, delta) {
-        this.player.update(time);
-        this.player.healthManager.Update(time, delta)
+        this.player.update(time, delta);
         this.waveHandler.update();
         this.weaponPickups.update(this.player);
         // () => passes as a function

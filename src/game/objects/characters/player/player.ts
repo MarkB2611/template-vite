@@ -3,6 +3,7 @@ import Bullet from "./projectiles/bullets/Bullet";
 import Weapon from "./projectiles/weapons/Weapon";
 import WeaponManager from "./projectiles/weapons/WeaponManager";
 import HealthManager from "./playerobjects/health/healthManager";
+import StaminaManager from "./playerobjects/stamina/staminaManager";
 
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -19,6 +20,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     // Replaced weapon System
     weaponManager!: WeaponManager;
     healthManager!: HealthManager;
+    staminaManager!: StaminaManager;
 
     //perk manager priority 2
 
@@ -33,21 +35,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     //Sprint Data
     baseSpeed = 200;
     sprintMultiplier = 1.8;
-
-    maxStamina = 100;
-    stamina = 100;
     
     //start with one live
     lives = 1;
 
-    staminaDrainRate = 0.58;
-    staminaRegenRate = 0.38;
-
-    staminaRegenDelay = 1600;
-    lastSprintTime = 0;
-
-    minSprintStamina = 10;
-    canSprint = true;
 
     wasPointerDown = false;
     isSprinting = false;
@@ -111,6 +102,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.weaponManager = new WeaponManager(scene, 2);
         this.healthManager = new HealthManager(80, 100, 1, this.scene);
+        this.staminaManager = new StaminaManager(100, 100, 1, this.scene);
 
         // input
         
@@ -189,7 +181,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     
 
-    update(time: number) {
+    update(time: number, delta: number) {
         //functions tying to mechanics
         if(this.isDestroyed) return;
         const weapon = this.weaponManager.getCurrentWeapon();
@@ -205,7 +197,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.weaponSwaps();
 
 
-
+        //manager updates
+        this.healthManager.Update(time, delta);
+        this.staminaManager.Update(time,delta);
         //Resets was fired for fire
         
         if(weapon?.fireMode != "auto") {
@@ -291,32 +285,16 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         let speed = this.baseSpeed;
         const isMoving = (dx !== 0 || dy !== 0);
 
-        // ✅ LOCK SYSTEM
-        if (this.stamina <= 0) {
-            this.canSprint = false;
-        }
-
-        if (this.stamina >= this.minSprintStamina) {
-            this.canSprint = true;
-        }
-
         // ✅ Sprint logic using lock
-        if (this.shiftKey.isDown && isMoving && this.canSprint) {
+        if (this.shiftKey.isDown && isMoving && this.staminaManager.canSprint) {
             this.isSprinting = true;
+            this.staminaManager.sprint();
             speed *= this.sprintMultiplier;
 
-            this.stamina -= this.staminaDrainRate;
-            if (this.stamina < 0) this.stamina = 0;
-
-            this.lastSprintTime = this.scene.time.now;
         } else {
             this.isSprinting = false;
 
-            // ✅ Regen (with delay if you added it)
-            if (this.scene.time.now > this.lastSprintTime + this.staminaRegenDelay) {
-                this.stamina += this.staminaRegenRate;
-                if (this.stamina > this.maxStamina) this.stamina = this.maxStamina;
-            }
+            this.staminaManager.walk();
         }
 
         // ✅ Movement

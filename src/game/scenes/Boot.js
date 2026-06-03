@@ -25,6 +25,20 @@ export class Boot extends Scene
         //objects
         //slrWallBuy
         this.load.image("weapon_1_still", "assets/wallpurchases/weapons/L1A1SLR/still/L1A1SLRSingle.png");
+        //AnimExplosion
+        this.load.image("muzzle_flash_1", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame1.png");   
+        this.load.image("muzzle_flash_2", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame2.png");    
+        this.load.image("muzzle_flash_3", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame3.png");  
+        this.load.image("muzzle_flash_4", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame4.png");     
+        this.load.image("muzzle_flash_5", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame5.png");   
+        this.load.image("muzzle_flash_6", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame6.png");   
+        this.load.image("muzzle_flash_7", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame7.png");      
+       
+        
+        this.load.image("endBackground", "assets/BlueRoseSonata Blood FX Pack/bloodslash_heavy.png");
+     
+        
+      
         //animSLR
         this.load.image("weapon_1_1", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr1.png");
         this.load.image("weapon_1_2", "assets/wallpurchases/weapons/L1A1SLR/Anim/slr2.png");
@@ -45,6 +59,9 @@ export class Boot extends Scene
         this.load.audio("sfx_gunshot_laser_1", "assets/sounds/game/mainloop/weapons/SoundFX1(laser).mp3" );
         //freesounds needs to be in accredations
         this.load.audio("sfx_gun_reload", "assets/sounds/game/mainloop/weapons/sourced-Freesounds-reload.mp3");
+        
+        //400sounds from itch
+        this.load.audio("sfx_muzzle_flash", "assets/sounds/400Sounds/Retro/explosion_quick.wav");
         
 
         //enemies/combat sound

@@ -21,7 +21,7 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite {
         penetration: number
     ) {
         super(scene, x, y, "bullet");
-
+        
         this.speed = speed;
         this.damage = damage;
 
@@ -35,17 +35,27 @@ export default class Bullet extends Phaser.Physics.Arcade.Sprite {
         this.setActive(true);
         this.setVisible(true);
 
+        this.setScale(1.8);
+
         scene.time.delayedCall(0, () => {
             const body = this.body as Phaser.Physics.Arcade.Body;
 
             if (!body) return;
+
+                            
+            this.setRotation(fireAngle); // rotates sprite visually
+
 
             scene.physics.velocityFromRotation(
                 fireAngle,
                 this.speed,
                 body.velocity
             );
+
         });
+
+
+
 
         // cleanup
         scene.time.delayedCall(3000, () => {

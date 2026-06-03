@@ -19,7 +19,7 @@ export default class WeaponPickupManager {
         //objects(wall buys)
         //Make a controller to just loop through updates for every wallbuy placed in the current room
         //tested the weapons from the csv and all of them work
-        const slrWallBuy = new WeaponPickup(scene, 220, 240, 9, 0.8);
+        const slrWallBuy = new WeaponPickup(scene, 220, 240, 1, 0.8);
         //objects(wall buys)
         const brwningWallBuy = new WeaponPickup(scene, 700, 600, 0, 0.4);
 
