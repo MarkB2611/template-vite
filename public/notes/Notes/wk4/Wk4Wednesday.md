@@ -23,15 +23,16 @@ Accomplished:
 wednesday
 - Stamina Bar + player stamina refactor to clear up more space and allow a stamina manager to handle more - decent pattern of using "managers" as apposed to one bulk class
 - intended to be made with not just stamiona, health and weapon managers(current version) but to add trait item managers, perks, and consumables
-
+- muzzle flash
+- proper firing location from correct oirign for the bullets.
+- Player Death and end condition - now has score, kills, etc showuing up on the death screen and a proper death condition
 
 Accomplishing:
-- Player Death and end condition
+
 
 
 Doing later:
 - before the 6th - AI LITERACY(even if you summarise the transcript)
-- End condition, screen flow of data to score kills etc.
 - write to a csv for data to be passed(with game scroe and stuff etc)
 
 

@@ -21,6 +21,7 @@ import WeaponPickup from '../objects/Buyables/Weapons/WeaponPickup';
 import GunNameUI from '../objects/UI/Player/gunNameUI';
 import GunDescriptionUI from '../objects/UI/Player/gunDescriptionUI';
 import HealthManager from '../objects/characters/player/playerobjects/health/healthManager';
+import GameOverScreenOverlay from '../objects/UI/Game/GameOverScreenOverlay';
 
 export class Game extends Scene {
     
@@ -129,6 +130,8 @@ export class Game extends Scene {
 
         this.events.on("game_over", ()=> {
             this.player.die();
+            this.gameOverScreen = new GameOverScreenOverlay(this, this.player.score, this.player.kills, this.player.deaths, this.waveHandler.WaveNumber);
+            this.gameOverScreen.setVisible(true);
         });
         
 
@@ -146,6 +149,9 @@ export class Game extends Scene {
         this.weaponPickups.update(this.player);
         // () => passes as a function
         // or this.onBuy.bind(this)
+        if(this.gameOverScreen) {
+            this.gameOverScreen.update();
+        }
         
     }
 

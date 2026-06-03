@@ -38,7 +38,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
     //start with one live
     lives = 1;
-
+    deaths = 0;
+    kills = 0;
 
     wasPointerDown = false;
     isSprinting = false;
@@ -51,6 +52,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     scene: Phaser.Scene;
 
+    alive: boolean = true;
 
 
 
@@ -155,6 +157,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     
         
     updateCrosshair() {
+        if(!this.alive) return;
+
         const pointer = this.scene.input.activePointer;
 
         const dist = Phaser.Math.Distance.Between(
@@ -183,6 +187,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     update(time: number, delta: number) {
         //functions tying to mechanics
+        if(!this.alive) return;
+
         if(this.isDestroyed) return;
         const weapon = this.weaponManager.getCurrentWeapon();
         if(!weapon) {
@@ -213,6 +219,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
 
     fire(time: number, weapon: Weapon | null) {
+        if(!this.alive) return;
+
         if(!weapon) {
             console.log("Weapon Not Found, Cant fire");
             return;
@@ -250,6 +258,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
     
     reload(weapon: Weapon|null) {
+        if(!this.alive) return;
+
         if (!weapon) return;
 
         if(weapon.clipAmount < weapon.depletionAmount || this.reloadKey.isDown && weapon.clipAmount < weapon.clipSize) {
@@ -274,6 +284,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
    
     
     move() {
+        if(!this.alive) return;
+
         let dx = 0;
         let dy = 0;
 
@@ -311,6 +323,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     //looking/aiming function
     look() {
+        if(!this.alive) return;
+
         
         const pointer = this.scene.input.activePointer;
 
@@ -331,14 +345,18 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     }
 
     takeDamage(num: number) {
+        if(!this.alive) return;
+
         this.healthManager.takeDamage(num);
         this.emit("playSound", "sfx_player_take_damage_1");
     }
     
 
     die() {
+        this.deaths++;
         this.disableBody();
         this.disableInteractive();
+        this.alive = false;
         //had issues destroying leave it here - still shoots after ;
     }
 
