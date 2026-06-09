@@ -51,6 +51,7 @@ export default class WaveHandler  {
         this.EnemiesKilled++;
     
         if(this.NumOfEnemiesRemain <= 0) {
+            this.scene.events.emit("wave_ended");
             this.NextWave();
         }
     }

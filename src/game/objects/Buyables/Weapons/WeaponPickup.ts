@@ -8,8 +8,8 @@ export default class WeaponPickup extends Phaser.Physics.Arcade.Sprite {
 
     private interactKey: Phaser.Input.Keyboard.Key;
     private promptText: Phaser.GameObjects.Text;
-
     private playerInRange: boolean = false;
+
 
     constructor(scene: Phaser.Scene, x: number, y: number, weaponId: number, scale: number)
     {
@@ -20,19 +20,19 @@ export default class WeaponPickup extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        // ✅ Interaction key
+        //interact key and prompt text
         this.interactKey = scene.input.keyboard!.addKey(
             Phaser.Input.Keyboard.KeyCodes.F
         );
 
-        // ✅ Prompt UI
-        this.promptText = scene.add.text(x, y - 40, "", {
+        this.promptText = scene.add.text(x, y - 50, "", {
             fontSize: "16px",
-            color: "#ffce47",
+            color: "#00ffcc",
             backgroundColor: "#000000"
         }).setOrigin(0.5);
 
         this.promptText.setVisible(false);
+
 
         this.setScale(scale);
 

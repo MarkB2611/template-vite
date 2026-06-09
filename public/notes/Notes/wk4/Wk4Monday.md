@@ -21,4 +21,4 @@ Accomplishing:
 Doing later:
 - Player damage system.
 - End condition, screen flow of data to score kills etc.
-- write ton a csv for data to be passed
+- write to a csv for data to be passed

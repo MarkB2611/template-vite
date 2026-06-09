@@ -34,8 +34,30 @@ export class Boot extends Scene
         this.load.image("muzzle_flash_6", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame6.png");   
         this.load.image("muzzle_flash_7", "assets/explosion pack 1/explosion pack 1/Explosions pack/explosion-1-g/Sprites/frame7.png");      
        
-        
+        //
         this.load.image("endBackground", "assets/BlueRoseSonata Blood FX Pack/bloodslash_heavy.png");
+
+        //RoomArrow anim + static
+        this.load.image("arrow1", "assets/gameScene/arrow/RoomArrow1.png");
+        this.load.image("arrow2", "assets/gameScene/arrow/RoomArrow2.png");
+        this.load.image("arrow3", "assets/gameScene/arrow/RoomArrow3.png");
+        this.load.image("arrow4", "assets/gameScene/arrow/RoomArrow4.png");
+        this.load.image("arrow5", "assets/gameScene/arrow/RoomArrow5.png");
+        this.load.image("arrow6", "assets/gameScene/arrow/RoomArrow6.png");
+        this.load.image("arrow7", "assets/gameScene/arrow/RoomArrow7.png");
+        this.load.image("arrow8", "assets/gameScene/arrow/RoomArrow8.png");
+        this.load.image("arrow9", "assets/gameScene/arrow/RoomArrow9.png");
+        this.load.image("arrow10", "assets/gameScene/arrow/RoomArrow10.png");
+        this.load.image("arrow11", "assets/gameScene/arrow/RoomArrow11.png");
+        this.load.image("arrow12", "assets/gameScene/arrow/RoomArrow12.png");
+        this.load.image("arrow13", "assets/gameScene/arrow/RoomArrow13.png");
+        this.load.image("arrow14", "assets/gameScene/arrow/RoomArrow14.png");
+        this.load.image("arrow15", "assets/gameScene/arrow/RoomArrow15.png");
+        this.load.image("arrow16", "assets/gameScene/arrow/RoomArrow16.png");
+
+        
+        
+
      
         
       
@@ -51,6 +73,8 @@ export class Boot extends Scene
         this.load.image("weapon_0_2", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim2.png");
         this.load.image("weapon_0_3", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim3.png");
         this.load.image("weapon_0_4", "assets/wallpurchases/weapons/BrowningHiPower/Anim/BrowningHiPowerAnim4.png");
+
+
 
         //sfx
         this.load.audio("sfx_wall_buy", "assets/sounds/game/mainloop/purchases/weapons/WallBuySfx.mp3");

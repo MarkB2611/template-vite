@@ -38,7 +38,7 @@ export default class Explosion extends Phaser.GameObjects.Sprite {
         this.setActive(true);
         this.setVisible(true);
 
-        this.setScale(1.8);
+  
 
         scene.time.delayedCall(0, () => {
             const body = this.body as Phaser.Physics.Arcade.Body;

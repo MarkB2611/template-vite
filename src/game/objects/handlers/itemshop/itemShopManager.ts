@@ -1,0 +1,1 @@
+//manager for spawning of the item shop

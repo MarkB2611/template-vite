@@ -1,0 +1,1 @@
+//can probalby be passed into the weaponPickupManager

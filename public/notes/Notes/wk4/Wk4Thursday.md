@@ -30,28 +30,18 @@ wednesday
 - completed AI literacy on udemy
 
 Accomplishing:
-
+- Extra Rooms - randomised weapons and spawns, wave scaling to room difficulty, randomised luck with the room to add a layer to randomisation
 
 
 Doing later:
+
+- screen shake/ wobble
+- animations for bullets through zombies and hits to the player
+- Perks perkpickups and perkmanager and perk pickup manager
+- randomised weapon pickup(for extra feature)
+
+- leaderboard repon that allows crud operations - create, delete, etc - if the game updates, automatically in the pipeline delete previous records and store them in a separate page full of historical high scores for example
+
 - write to a csv for data to be passed(with game scroe and stuff etc)
 
 
-
-**BIg Git Commit**
-**To the Phaser Frontend Repo**
-Function stamina bar among other improvements
-
-other improvements include:
-- the bullet now fires from the players pistol - if I want ton add a 2 handed player sprite for the rifles etc I can use that or akimbo(this would require a lot of work probably but set up well for scalability with weapon stats).
-- Muzzle flash - added a muzzle flash sound and animation to the weapon firing since I now have the correct rotation and fire oriign on the players weapons.
-
-Main Affected Files:
-Weapon.ts
-Bullet.ts
-game.js
-
-added Files:
-StaminaManager.ts
-StaminaBarUI.ts
-Explosion.ts

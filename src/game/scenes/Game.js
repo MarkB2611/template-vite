@@ -8,6 +8,10 @@ import Weapon from '../objects/characters/player/projectiles/weapons/Weapon';
 import WeaponManager from '../objects/characters/player/projectiles/weapons/WeaponManager';
 import WeaponPickupManager from '../objects/Buyables/Weapons/WeaponPickupManager';
 
+import RoomHandler from '../objects/handlers/game/roomHandler';
+import PerkPickupManager from '../objects/handlers/perks/perkPickupManager';
+import DoorArrow from '../objects/handlers/game/doorArrow';
+
 
 import BaseZombie from '../objects/handlers/enemies/baseEnemy';
 import AmmoUI from "../objects/UI/Weapons/AmmoUI";
@@ -73,11 +77,22 @@ export class Game extends Scene {
         this.soundHandler = new SoundHandler(this);
         this.soundHandler.startPlaylist();
 
+        
+
+        this.weaponPickups = new WeaponPickupManager(this);
+        this.perkManager = new PerkPickupManager(this);
         this.waveHandler = new WaveHandler(this, this.enemies);
         this.waveHandler.SpawnEnemies();
 
-        this.weaponPickups = new WeaponPickupManager(this);
-        
+        // ✅ Room system (THIS now controls spawning)
+        this.roomHandler = new RoomHandler(
+            this,
+            this.weaponPickups,
+            this.perkManager,
+            this.waveHandler
+        );
+
+                
 
 
         
@@ -133,13 +148,22 @@ export class Game extends Scene {
             this.gameOverScreen = new GameOverScreenOverlay(this, this.player.score, this.player.kills, this.player.deaths, this.waveHandler.WaveNumber);
             this.gameOverScreen.setVisible(true);
         });
-        
 
+        this.events.on(("door_selected"), (choiceID)=> {
+            this.movePlayerToRoom(choiceID);
+            this.roomHandler.arrowHandler.clearArrows();
+        });
+        
+        
 
         //initialises first round.
         this.soundHandler.playSFX("sfx_wave_start", 0.4, 1.4);
         console.log("wave 1 started");
 
+        
+        this.roomArrow = new DoorArrow(this, 400, 400, 1);
+        this.roomArrow.makeVisible();
+        this.roomArrow.playBuyDoorAnim();
         
     }
 
@@ -147,13 +171,77 @@ export class Game extends Scene {
         this.player.update(time, delta);
         this.waveHandler.update();
         this.weaponPickups.update(this.player);
+        this.roomHandler.update(this.player);
         // () => passes as a function
         // or this.onBuy.bind(this)
+
+        // ✅ Room progression trigger
+        if (this.waveHandler.NumOfEnemiesRemain <= 0) {
+            this.roomHandler.advanceRoom(this.weaponPickups, this.perkManager, this.waveHandler);
+            this.advanceRoom();
+
+        }
+
+
         if(this.gameOverScreen) {
             this.gameOverScreen.update();
         }
         
     }
+
+
+    advanceRoom(choiceID) {
+
+        console.log("Advancing room via door:", choiceID);
+
+        // ✅ Tell RoomHandler which door was chosen
+        this.roomHandler.selectDoor(choiceID);
+
+        // ✅ Move player BEFORE generating new room
+        this.movePlayerToRoom(choiceID);
+
+        // ✅ Generate room based on that choice
+        this.roomHandler.advanceRoom(
+            this.weaponPickups,
+            this.perkManager,
+            this.waveHandler
+        );
+
+        this.soundHandler.playSFX("sfx_wave_start", 0.4, 1.2);
+    }
+
+
+    
+    movePlayerToRoom(choiceID) {
+
+        const centerX = 512;
+        const centerY = 384;
+        const offset = 250;
+
+        const directions = [
+            { x: 0, y: -offset },           // 0 up
+            { x: offset, y: -offset },      // 1 up-right
+            { x: offset, y: 0 },            // 2 right
+            { x: offset, y: offset },       // 3 down-right
+            { x: 0, y: offset },            // 4 down
+            { x: -offset, y: offset },      // 5 down-left
+            { x: -offset, y: 0 },           // 6 left
+            { x: -offset, y: -offset },     // 7 up-left
+        ];
+
+        // ✅ Get opposite direction
+        const oppositeID = (choiceID + 4) % 8;
+        const dir = directions[oppositeID];
+
+        this.player.setPosition(
+            centerX + dir.x,
+            centerY + dir.y
+        );
+
+        console.log("Spawned using opposite direction:", oppositeID);
+    }
+
+
 
 
     onBulletHit(bullet, enemy) {
