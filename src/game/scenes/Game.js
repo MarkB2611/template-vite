@@ -77,9 +77,9 @@ export class Game extends Scene {
         this.soundHandler = new SoundHandler(this);
         this.soundHandler.startPlaylist();
 
-        
 
-        this.weaponPickups = new WeaponPickupManager(this);
+        //includes the weaponManager as that stores the csv info
+        this.weaponPickups = new WeaponPickupManager(this, this.player.weaponManager);
         this.perkManager = new PerkPickupManager(this);
         this.waveHandler = new WaveHandler(this, this.enemies);
         this.waveHandler.SpawnEnemies();
@@ -97,8 +97,8 @@ export class Game extends Scene {
 
         
         // UI AT THIS POINT
-        this.gunNameUI = new GunNameUI(this, 980, 620, "Dusty Revolver")
-        this.gunDescUI = new GunDescriptionUI(this, 980, 650, "Cruddy Old Revolver, Not very good\nbut its something.");
+        this.gunNameUI = new GunNameUI(this, 980, 650, "Dusty Revolver")
+        this.gunDescUI = new GunDescriptionUI(this, 980, 680, "Cruddy Old Revolver, Not very good\nbut its something.");
         this.ammoUI = new AmmoUI(this, 940, 700);
         this.score = new ScoreNumberUI(this, 930, 170, this.player.score);
         
@@ -109,7 +109,7 @@ export class Game extends Scene {
 
 
         // ✅ UI (clean + separated)
-        this.locationUI = new LocationUI(this, 150, 50, "groundZero");
+        this.locationUI = new LocationUI(this, 180, 80, "groundZero");
 
         this.enemyRemainingUI = new EnemiesRemainUI(this, 880, 50, this.waveHandler.NumOfEnemiesRemain,  this.waveHandler.MaxEnemies);
         this.waveNumberUI = new WaveNumberUI(this, 880, 115, this.waveHandler.WaveNumber);
@@ -121,8 +121,8 @@ export class Game extends Scene {
         });*/
         //weapon swaps
         this.events.on("weaponSwitched", (index, weapon) => {
-           this.gunNameUI.setText(weapon.name); 
-           this.gunDescUI.setText(weapon.description);
+           this.gunNameUI.setName(weapon.name); 
+           this.gunDescUI.setName(weapon.description);
         });
        
         //reloading
@@ -153,6 +153,10 @@ export class Game extends Scene {
             this.movePlayerToRoom(choiceID);
             this.roomHandler.arrowHandler.clearArrows();
         });
+
+        this.events.on("change_location_name", (name, roomsTraversed)=> {
+            this.locationUI.setValues(name, roomsTraversed);
+        })
         
         
 
@@ -161,9 +165,7 @@ export class Game extends Scene {
         console.log("wave 1 started");
 
         
-        this.roomArrow = new DoorArrow(this, 400, 400, 1);
-        this.roomArrow.makeVisible();
-        this.roomArrow.playBuyDoorAnim();
+      
         
     }
 

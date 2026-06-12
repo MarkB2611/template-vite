@@ -12,6 +12,8 @@ export type RoomChoice = {
     active: boolean;
 }
 
+
+
 export default class RoomHandler {
 
    
@@ -19,6 +21,7 @@ export default class RoomHandler {
     // Intended to eventually have a 30 second timer witht he arrows to disappear s not to clutter the screen for players staying, and tio add a mechanic to fast paced decisions
     choiceID: number = 0;
     doorMaxAmount: number = 8;
+    roomsTraversed: number = 0;
     
     choices: RoomChoice[] = []; // Array Definition
     currentChoice!: RoomChoice;
@@ -31,6 +34,7 @@ export default class RoomHandler {
     weaponPickupManager!: WeaponPickupManager;
     perkManager!: PerkPickupManager;
     waveHandler!: WaveHandler;
+    locationName!: string;
 
 
 
@@ -45,8 +49,9 @@ export default class RoomHandler {
         this.currentChoice = this.getActiveChoice();
         this.makeNewRoom(this.weaponPickupManager, this.perkManager, this.waveHandler);
         
-
         
+        this.locationName = "Ground Zero(the start)";
+        this.scene.events.emit("change_location_name", this.locationName, this.roomsTraversed);
 
         this.scene.events.on("wave_ended", ()=> {
             this.makeArrows();
@@ -54,6 +59,11 @@ export default class RoomHandler {
         this.scene.events.on(("door_selected"), (choiceID: number)=> {
             this.selectDoor(choiceID);
             this.makeNewRoom(this.weaponPickupManager, this.perkManager, this.waveHandler);
+
+            this.locationName = this.generateRoomName();
+            this.roomsTraversed++;
+
+            this.scene.events.emit("change_location_name", this.locationName, this.roomsTraversed);
 
         });
     }
@@ -114,6 +124,7 @@ export default class RoomHandler {
     makeNewRoom(weaponPickupManager: WeaponPickupManager, perkManager: PerkPickupManager, waveHandler: WaveHandler) {
         this.currentRoom = new Room(weaponPickupManager, perkManager, waveHandler);
         this.currentRoom.initialiseRoom(this.currentChoice.luck);
+        this.initChoices();
     }
 
 
@@ -123,6 +134,33 @@ export default class RoomHandler {
         
         this.makeNewRoom(weaponPickupManager, perkManager, waveHandler);
     }
+
+    //procedural room naming
+    // expandable for procedural room effects - background png stays the same but colours, etc change
+    generateRoomName(): string {
+
+        const adjectives = [
+            "Abandoned",
+            "Frozen",
+            "Cursed",
+            "Silent",
+            "Burning"
+        ];
+
+        const locations = [
+            "Corridor",
+            "Chamber",
+            "Hall",
+            "Sanctum",
+            "Vault"
+        ];
+
+        const adj = Phaser.Utils.Array.GetRandom(adjectives);
+        const loc = Phaser.Utils.Array.GetRandom(locations);
+
+        return `${adj} ${loc}`;
+    }
+
 
     //to be called at the end of a round to show the arrows
     makeArrows() {

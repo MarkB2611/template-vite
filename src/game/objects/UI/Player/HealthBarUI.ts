@@ -17,6 +17,8 @@ export class HealthBarUI {
     bar: Phaser.GameObjects.Graphics;
     border: Phaser.GameObjects.Graphics;
 
+    private fadeTimer?: Phaser.Time.TimerEvent;
+
     constructor(
         scene: Phaser.Scene,
         x: number,
@@ -52,16 +54,56 @@ export class HealthBarUI {
 
         // Listen for health updates
         healthManager.on("healthChanged", this.updateHealth, this);
+        healthManager.on("healthDamaged", this.showVisible, this);
+        healthManager.on("healthHealed", this.showInvisible, this);
+        healthManager.on("healthHealing", this.showVisible, this);
 
         
 
         this.draw();
     }
 
+    showInvisible() {
+        // reset timer if called again
+        if (this.fadeTimer) {
+            this.fadeTimer.remove(false);
+        }
+
+        this.fadeTimer = this.scene.time.delayedCall(2000, () => {
+
+            this.scene.tweens.add({
+                targets: [this.background, this.bar, this.border],
+                alpha: 0,
+                duration: 1200,
+                ease: "Linear"
+            });
+
+        });
+    }
+
+
+    
+    
+    showVisible() {
+        // cancel any pending fade-out
+        if (this.fadeTimer) {
+            this.fadeTimer.remove(false);
+        }
+
+        // kill any fade tween
+        this.scene.tweens.killTweensOf([this.background, this.bar, this.border]);
+
+        // instantly visible
+        this.background.setAlpha(1);
+        this.bar.setAlpha(1);
+        this.border.setAlpha(1);
+    }
 
     updateHealth(current: number, max: number) {
         this.currentHealth = current;
         this.maxHealth = max;
+        //if max health is equal to current health - then make healthbar invisible
+    
         this.draw();
     }
 
@@ -92,10 +134,16 @@ export class HealthBarUI {
 
     damage(amount: number) {
         this.setHealth(this.currentHealth - amount);
+        this.background.setVisible(true);
+        this.border.setVisible(true);
+        this.bar.setVisible(true);
     }
 
     heal(amount: number) {
         this.setHealth(this.currentHealth + amount);
+        this.background.setVisible(true);
+        this.border.setVisible(true);
+        this.bar.setVisible(true);
     }
 
     setMaxHealth(newMax: number) {

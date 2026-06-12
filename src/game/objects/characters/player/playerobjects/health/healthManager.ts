@@ -41,6 +41,7 @@ export default class HealthManager extends Phaser.Events.EventEmitter {
 
         // Emit event when health changes
         this.emit("healthChanged", this.health, this.maxHealth);
+        this.emit("healthDamaged");
 
         if (this.health <= 0) {
             this.scene.events.emit("dead");
@@ -52,12 +53,19 @@ export default class HealthManager extends Phaser.Events.EventEmitter {
         this.health += amount;
         this.health = Phaser.Math.Clamp(this.health, 0, this.maxHealth);
 
+        if(this.health === this.maxHealth) {
+            this.emit("healthHealed");
+        } else {
+            this.emit("healthHealing");
+        }
         this.emit("healthChanged", this.health, this.maxHealth);
+   
     }
 
     healMax() {
         this.health = this.maxHealth;
         this.emit("healthChanged", this.health, this.maxHealth);
+        this.emit("healthHealed");
     }
 
    
@@ -85,9 +93,12 @@ export default class HealthManager extends Phaser.Events.EventEmitter {
 
         // Emit change
         this.emit("healthChanged", this.health, this.maxHealth);
+        if(this.health === this.maxHealth) {
+            this.emit("healthHealed");
+        }
     }
 
 
 
 
-}
+} 

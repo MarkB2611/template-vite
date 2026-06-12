@@ -17,6 +17,10 @@ export class StaminaBarUI {
     bar: Phaser.GameObjects.Graphics;
     border: Phaser.GameObjects.Graphics;
 
+    //For fading out animation
+    private fadeTimer?: Phaser.Time.TimerEvent;
+    
+
     constructor(
         scene: Phaser.Scene,
         x: number,
@@ -53,17 +57,61 @@ export class StaminaBarUI {
         // Listen for stamina updates
         staminaManager.on("StaminaChanged", this.updateStamina, this);
 
+        staminaManager.on("Sprinting", this.makeBarVisible, this);
+        staminaManager.on("Healing", this.makeBarVisible, this);
+        staminaManager.on("Healed", this.makeBarInvisible, this);
         
 
         this.draw();
     }
 
+    
+    
+    makeBarInvisible() {
+        // reset timer if called again
+        if (this.fadeTimer) {
+            this.fadeTimer.remove(false);
+        }
+
+        this.fadeTimer = this.scene.time.delayedCall(2000, () => {
+
+            this.scene.tweens.add({
+                targets: [this.background, this.bar, this.border],
+                alpha: 0,
+                duration: 1200,
+                ease: "Linear"
+            });
+
+        });
+    }
+
+
+    
+    
+    makeBarVisible() {
+        // cancel any pending fade-out
+        if (this.fadeTimer) {
+            this.fadeTimer.remove(false);
+        }
+
+        // kill any fade tween
+        this.scene.tweens.killTweensOf([this.background, this.bar, this.border]);
+
+        // instantly visible
+        this.background.setAlpha(1);
+        this.bar.setAlpha(1);
+        this.border.setAlpha(1);
+    }
+
+
 
     updateStamina(current: number, max: number) {
         this.currentStamina = current;
         this.maxStamina = max;
+       
         this.draw();
     }
+
 
 
     draw() {
@@ -92,10 +140,16 @@ export class StaminaBarUI {
 
     damage(amount: number) {
         this.setStamina(this.currentStamina - amount);
+        this.background.setVisible(true);
+        this.border.setVisible(true);
+        this.bar.setVisible(true);
     }
 
     heal(amount: number) {
         this.setStamina(this.currentStamina + amount);
+        this.background.setVisible(true);
+        this.border.setVisible(true);
+        this.bar.setVisible(true);
     }
 
     setMaxstamina(newMax: number) {

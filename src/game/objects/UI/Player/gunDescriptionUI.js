@@ -19,7 +19,7 @@ export default class GunDescriptionUI extends Phaser.GameObjects.Text {
 
         });
 
-
+        this.setName(gunDesc);
         
         this.setOrigin(0.9);
         this.setAlpha(0.9);
@@ -29,6 +29,10 @@ export default class GunDescriptionUI extends Phaser.GameObjects.Text {
     
 
     setName(gunDesc) {
+        this.setVisible(true);
         this.setText(gunDesc);
+        setTimeout(() => {
+            this.setVisible(false);
+        }, 6000);
     }
 }

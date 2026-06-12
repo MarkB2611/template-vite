@@ -11,8 +11,8 @@ optional IDEAs:
 to do:
 - make the wavespawner have a delay to allow for the player to not have zombies spawn on them
 - also have a delay at the end of the round
-
-
+- UI for the room number and room name
+- UI reactive to events - i.e once healed disappear the healthbar etc
 
 Accomplished:
 - room traversal

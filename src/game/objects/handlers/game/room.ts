@@ -35,5 +35,9 @@ export default class Room {
 
     initWeaponPickupManager(luck: number) {
 
+        const wave = this.wm.WaveNumber; // ✅ from WaveHandler
+
+        this.wpm.generateWeaponPlacements(luck, wave);
+
     }
 }
