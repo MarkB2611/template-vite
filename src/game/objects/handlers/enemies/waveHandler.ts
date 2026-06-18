@@ -30,10 +30,21 @@ export default class WaveHandler  {
 
         this.scene.events.on("enemy_dead", this.onEnemyDead, this);
 
-
+        this.scene.events.on("door_selected", this.moveAliveEnemiesOutOfRoom, this);
         
     }
         
+    //used to move original enemies out of the room - 
+    // this makes the game more playable when players are traversing rooms - what we dont want
+    // is for the player to get attacked by enemies upon spawning in the room they chose
+    // activated when a door is selected
+    moveAliveEnemiesOutOfRoom() {
+        this.enemies.forEach((enemy) => {
+            if(enemy!=undefined) {
+                enemy.teleportOutOfRoom();
+            }
+        });
+    }
     
     
     onEnemyDead(enemy: BaseZombie) {

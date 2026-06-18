@@ -205,7 +205,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         //manager updates
         this.healthManager.Update(time, delta);
-        this.staminaManager.Update(time,delta);
+        this.staminaManager.Update();
         //Resets was fired for fire
         
         if(weapon?.fireMode != "auto") {
@@ -238,19 +238,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             switch (weapon.fireMode) {
                 case "auto":
                     if (pointer.isDown) {
-                        weapon.shoot(this.x, this.y, this.targetAngle, time);
+                        weapon.shoot(this, this.targetAngle, time);
                     }
                     break;
 
                 case "semi":
                     if (justClicked) {
-                        weapon.shoot(this.x, this.y, this.targetAngle, time);
+                        weapon.shoot(this, this.targetAngle, time);
                     }
                     break;
 
                 case "burst":
                     if (justClicked) {
-                        weapon.shoot(this.x, this.y, this.targetAngle, time);
+                        weapon.shoot(this, this.targetAngle, time);
                     }
                     break;
             }

@@ -4,6 +4,7 @@ import * as Phaser from "phaser";
 import Bullet from "../bullets/Bullet";
 import { WeaponConfig } from "./WeaponManager";
 import Explosion from "../explosions/Explosion";
+import Player from "../../player";
 
 export default class Weapon {
     scene: Phaser.Scene;
@@ -76,7 +77,7 @@ export default class Weapon {
         this.assetDirectory = config.assetDirectory ?? "NA";
     }
 
-    shoot(x: number, y: number, angle: number, time: number) {
+    shoot(player: Player, angle: number, time: number) {
         if (time < this.lastFired + this.fireRate) return;
         if (this.clipAmount < this.depletionAmount) return;
         if (this.isReloading) return;
@@ -99,15 +100,15 @@ export default class Weapon {
                     const spread = Phaser.Math.FloatBetween(-this.spread, this.spread);
 
 
-                    const offsetX = 20;   // right of player
-                    const offsetY = -10;  // above player
+                    const offsetX = 25;   // right of player
+                    const offsetY = 10;  // above player
 
                     const cos = Math.cos(angle);
                     const sin = Math.sin(angle);
 
                     // rotate offset around player
-                    const spawnX = x + (offsetX * cos - offsetY * sin);
-                    const spawnY = y + (offsetX * sin + offsetY * cos);
+                    const spawnX = player.x + (offsetX * cos - offsetY * sin);
+                    const spawnY = player.y + (offsetX * sin + offsetY * cos);
 
                     const bullet = new Bullet(
                         this.scene,
@@ -145,8 +146,8 @@ export default class Weapon {
                 const sin = Math.sin(angle);
 
                 // rotate offset around player
-                const spawnX = x + (offsetX * cos - offsetY * sin);
-                const spawnY = y + (offsetX * sin + offsetY * cos);
+                const spawnX = player.x + (offsetX * cos - offsetY * sin);
+                const spawnY = player.y + (offsetX * sin + offsetY * cos);
 
 
                 const bullet = new Bullet(
