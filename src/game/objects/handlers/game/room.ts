@@ -17,27 +17,32 @@ export default class Room {
 
     //all between 1 and -1
     initialiseRoom(luckSeed: number) {
-        this.initWaveManager(luckSeed);
-        this.initPerKManager(luckSeed);
-        this.initWeaponPickupManager(luckSeed);
+
+        // ✅ Clear existing pickups first
+        this.wpm.clearPickups();
+
+        const wave = this.wm.WaveNumber;
+        
+        // ✅ Tell the system to generate buyables
+        this.wpm["scene"].events.emit(
+            "generate_buyables",
+            luckSeed,
+            wave
+        );
         
     }
 
     initWaveManager(luck: number) {
-        if(luck < 0) {
-            
-        }
+     
     }
 
     initPerKManager(luck: number) {
 
     }
 
+    
     initWeaponPickupManager(luck: number) {
 
-        const wave = this.wm.WaveNumber; // ✅ from WaveHandler
-
-        this.wpm.generateWeaponPlacements(luck, wave);
-
     }
+
 }

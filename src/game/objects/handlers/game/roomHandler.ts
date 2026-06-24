@@ -131,6 +131,7 @@ export default class RoomHandler {
     advanceRoom( weaponPickupManager: WeaponPickupManager, perkManager: PerkPickupManager, waveHandler: WaveHandler) {
         this.initChoices();
         this.currentChoice = this.getActiveChoice();
+        this.currentRoom.initialiseRoom(this.currentChoice.luck);
         
         this.makeNewRoom(weaponPickupManager, perkManager, waveHandler);
     }

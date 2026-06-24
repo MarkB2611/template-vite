@@ -33,6 +33,36 @@ export default class WeaponPickupManager {
         //csv weapon handling needed for room advancement
         this.weaponManager = weaponManager;
 
+        
+
+
+                
+        this.scene.events.on(
+            "buyable_node_selected",
+            (pos: [number, number], buyableID: number, type: any, typeID: number) => {
+                const [x, y] = pos;
+                console.log("Spawning weapon at: ", x, y, "id:", buyableID);
+                if (type !== "weapon") return;
+
+                
+
+                if (x === -1) return;
+
+                const pickup = new WeaponPickup(
+                    this.scene,
+                    x,
+                    y,
+                    typeID, // ✅ correct
+                    0.6
+                );
+
+                this.weaponPickups.set(buyableID, pickup);
+                console.log("Spawned weapon at: ", x, y, "id:", buyableID);
+            }
+        );
+
+
+
 
 
     }
@@ -93,61 +123,28 @@ export default class WeaponPickupManager {
         return chosen.id;
     }
 
-    //generated using prompting - IDea is to have 9 locations where the weaponPickups can spawn.
+    //generated using prompting - Idea refactored from hard coded to allow for easier checking to esnure weapon pickups dont go over upgrades etc.
     generateWeaponPlacements(luck: number, wave: number) {
 
-        // 🧹 Clear old pickups
         this.clearPickups();
 
-        // 🎯 9 fixed spawn locations - add to the others later so I can have randomised spanwns for perk machines, and for weaponUpgrade machines.
-        const spawnPoints = [
-            { x: 150, y: 150 },
-            { x: 400, y: 150 },
-            { x: 650, y: 150 },
-
-            { x: 150, y: 350 },
-            { x: 400, y: 350 },
-            { x: 650, y: 350 },
-
-            { x: 150, y: 550 },
-            { x: 400, y: 550 },
-            { x: 650, y: 550 }
-        ];
-
-        // 🎲 Decide number of weapons (1–3)
         const weaponCount = Phaser.Math.Between(1, 3);
-
-        // 🃏 Shuffle spawn points so we get random positions
-        const shuffledPoints = Phaser.Utils.Array.Shuffle([...spawnPoints]);
-
-        // ✅ Optional: prevent duplicates
         const usedWeapons = new Set<number>();
 
         for (let i = 0; i < weaponCount; i++) {
 
             let weaponId: number;
 
-            // 🎯 Avoid duplicates
             do {
                 weaponId = this.pickWeapon(luck, wave);
             } while (usedWeapons.has(weaponId));
 
             usedWeapons.add(weaponId);
 
-            const point = shuffledPoints[i];
-
-            const pickup = new WeaponPickup(
-                this.scene,
-                point.x,
-                point.y,
-                weaponId,
-                0.6 // scale (you can vary this later)
-            );
-
-            this.weaponPickups.set(i, pickup);
+            // 🔥 request a spawn location instead of deciding it here
+            this.scene.events.emit("buyable_node_initiated", weaponId);
         }
     }
-
 
 
 

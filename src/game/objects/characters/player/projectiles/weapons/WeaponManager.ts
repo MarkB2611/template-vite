@@ -1,5 +1,6 @@
 import * as Phaser from "phaser"
 import Weapon from "./Weapon";
+import Player from "../../player";
 
 //AI Generated to accellerate development, based upon the weapon class context (bottom Up methodology)
 // this should control multiple weapons for the player cleanly and parse the Weapons CSV file/
@@ -233,11 +234,7 @@ export default class WeaponManager {
     // ✅ ACTIONS
     // =========================================
 
-    shoot(x: number, y: number, angle: number, time: number) {
-        if (!this.currentWeapon) return;
-
-        this.currentWeapon.shoot(x, y, angle, time);
-    }
+   
 
     reload() {
         if (!this.currentWeapon) return;

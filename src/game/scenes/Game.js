@@ -26,6 +26,8 @@ import GunNameUI from '../objects/UI/Player/gunNameUI';
 import GunDescriptionUI from '../objects/UI/Player/gunDescriptionUI';
 import HealthManager from '../objects/characters/player/playerobjects/health/healthManager';
 import GameOverScreenOverlay from '../objects/UI/Game/GameOverScreenOverlay';
+import BuyableLocationHandler from '../objects/handlers/game/buyableLocationHandler';
+import SpawnDirector from '../objects/Buyables/Weapons/SpawnDirector';
 
 export class Game extends Scene {
     
@@ -71,19 +73,24 @@ export class Game extends Scene {
         );
 
 
-        
- 
+       
+
+    
         //sound handler(handles music and sound effects)
         this.soundHandler = new SoundHandler(this);
         this.soundHandler.startPlaylist();
-
+        
 
         //includes the weaponManager as that stores the csv info
         this.weaponPickups = new WeaponPickupManager(this, this.player.weaponManager);
+        
         this.perkManager = new PerkPickupManager(this);
         this.waveHandler = new WaveHandler(this, this.enemies);
         this.waveHandler.SpawnEnemies();
 
+        this.buyableLocationHandler = new BuyableLocationHandler(this);
+        this.spawnDirector = new SpawnDirector(this, this.player.weaponManager);
+   
         // ✅ Room system (THIS now controls spawning)
         this.roomHandler = new RoomHandler(
             this,
@@ -91,6 +98,11 @@ export class Game extends Scene {
             this.perkManager,
             this.waveHandler
         );
+
+       
+        
+
+        
 
                 
 
